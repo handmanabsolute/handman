@@ -11,15 +11,9 @@
 
         <div class="max-w-100 w-full mx-auto flex flex-col justify-center grow py-4">
             <div class="text-center mb-6 shrink-0">
-                <h1 class="text-2xl font-bold text-gray-900 mb-1">Lupa Password</h1>
-                <p class="text-sm text-gray-500">Silakan masukkan email Anda untuk menerima link reset password</p>
+                <h1 class="text-2xl font-bold text-gray-900 mb-1">Reset Password Baru</h1>
+                <p class="text-sm text-gray-500">Silakan tentukan password baru untuk akun Anda</p>
             </div>
-
-            @if (session('status'))
-                <div class="bg-green-50 text-green-600 p-3 rounded-xl text-sm mb-4 text-center shrink-0">
-                    {{ session('status') }}
-                </div>
-            @endif
 
             @if ($errors->any())
                 <div class="bg-red-50 text-red-500 p-3 rounded-xl text-xs mb-4 text-center shrink-0">
@@ -31,16 +25,24 @@
                 </div>
             @endif
 
-            <form action="{{ route('password.email') }}" method="POST" novalidate class="space-y-4 grow flex flex-col justify-center">
+            <form action="{{ route('password.update') }}" method="POST" novalidate class="space-y-4 grow flex flex-col justify-center">
                 @csrf
 
+                <input type="hidden" name="token" value="{{ $token }}">
+                <input type="hidden" name="username_input" value="{{ $email }}">
+
                 <div>
-                    <label for="username_input" class="block text-xs font-medium text-gray-500 mb-2 pl-1">Alamat Email</label>
-                    <input type="email" id="username_input" name="username_input" value="{{ old('username_input') }}" placeholder="nama@email.com" class="w-full px-4 py-3 rounded-xl border border-transparent bg-[#F3F4F6] focus:border-[#3B28CC] focus:bg-white outline-none transition text-sm font-medium text-gray-800">
+                    <label for="password_input" class="block text-xs font-medium text-gray-500 mb-2 pl-1">Password Baru</label>
+                    <input type="password" id="password_input" name="password_input" placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-transparent bg-[#F3F4F6] focus:border-[#3B28CC] focus:bg-white outline-none transition text-sm font-medium text-gray-800">
+                </div>
+
+                <div>
+                    <label for="password_input_confirmation" class="block text-xs font-medium text-gray-500 mb-2 pl-1">Konfirmasi Password Baru</label>
+                    <input type="password" id="password_input_confirmation" name="password_input_confirmation" placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border border-transparent bg-[#F3F4F6] focus:border-[#3B28CC] focus:bg-white outline-none transition text-sm font-medium text-gray-800">
                 </div>
 
                 <button type="submit" class="w-full bg-[#3B28CC] hover:bg-[#2A1BA3] text-white font-medium py-3 rounded-full transition shadow-lg shadow-indigo-100 mt-2 cursor-pointer">
-                    Kirim Link Reset Password
+                    Perbarui Password
                 </button>
             </form>
 

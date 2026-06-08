@@ -23,6 +23,7 @@ class User extends Authenticatable
         'no_telp',
         'jenis_kelamin',
         'tanggal_lahir',
+        'is_active',
         'foto_profil',
         'status_pegawai',
         'alamat',

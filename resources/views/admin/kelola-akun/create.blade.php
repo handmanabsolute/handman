@@ -34,16 +34,6 @@
                     <p class="text-xs text-red-600 error-msg hidden" id="error-email"></p>
                 </div>
 
-                <div class="space-y-1.5">
-                    <label class="text-sm font-medium text-gray-700">Password</label>
-                    <div class="relative w-full">
-                        <input type="password" id="password" name="password" required class="w-full px-4 py-2.5 mt-1.5 pr-11 text-sm text-gray-800 bg-white border border-gray-200 rounded-xl focus:border-[#3B28CC] focus:ring-1 focus:ring-[#3B28CC] outline-none transition-all">
-                        <button type="button" onclick="const p = document.getElementById('password'); p.type = p.type === 'password' ? 'text' : 'password'; this.querySelector('i').classList.toggle('fa-eye'); this.querySelector('i').classList.toggle('fa-eye-slash');" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
-                            <i class="fa-solid fa-eye text-sm"></i>
-                        </button>
-                    </div>
-                    <p class="text-xs text-red-600 error-msg hidden" id="error-password"></p>
-                </div>
 
                 <div class="space-y-1.5">
                     <label class="text-sm font-medium text-gray-700">No. Telepon</label>
@@ -73,6 +63,7 @@
                         <option value="" disabled {{ old('status_pegawai') == '' ? 'selected' : '' }}>Pilih Status Pegawai</option>
                         <option value="magang" {{ old('status_pegawai') == 'magang' ? 'selected' : '' }}>Magang</option>
                         <option value="tetap" {{ old('status_pegawai') == 'tetap' ? 'selected' : '' }}>Tetap</option>
+                        <option value="Skorsing" {{ old('status_pegawai') == 'Skorsing' ? 'selected' : '' }}>Skorsing</option>
                     </select>
                     <p class="text-xs text-red-600 error-msg hidden" id="error-status_pegawai"></p>
                 </div>
@@ -127,14 +118,7 @@
 
 </div>
 
-<x-confirm-modal
-    id="confirm"
-    title="Konfirmasi Simpan Akun"
-    message="Apakah Anda yakin data yang dimasukkan sudah benar dan ingin menyimpan akun baru ini?"
-    action="executeGlobalAjaxSubmit('form-akun', 'confirm')"
-    method="POST"
-    type="primary"
-/>
+<x-confirm-modal id="confirm" title="Konfirmasi Simpan Akun" message="Apakah Anda yakin data yang dimasukkan sudah benar dan ingin menyimpan akun baru ini?" action="executeGlobalAjaxSubmit('form-akun', 'confirm')" method="POST" type="primary" />
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {

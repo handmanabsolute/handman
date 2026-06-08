@@ -5,19 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Tugas;
 use App\Models\Lampiran;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class c_kelolaTugas extends Controller
 {
     public function index()
     {
-        $tugas = Tugas::with('lampirans')->latest()->get();
+        $departemenId = auth()->user()->departemen_id;
+        $tugas = Tugas::where('departemen_id', $departemenId)->latest()->get();
 
-        if (Auth::user()->nama_role === 'manager') {
-            return view('manager.tugas.index', compact('tugas'));
+        if (auth()->user()->nama_role === 'staff') {
+            return view('staff.tugas.index', compact('tugas'));
         }
 
-        return view('staff.tugas.index', compact('tugas'));
+        return view('manager.tugas.index', compact('tugas'));
     }
 
     public function create()
@@ -27,101 +28,169 @@ class c_kelolaTugas extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->merge([
+            'tanggal_tugas' => $request->filled(['tanggal_tugas_date', 'tanggal_tugas_time'])
+                ? $request->tanggal_tugas_date . ' ' . $request->tanggal_tugas_time
+                : null,
+            'deadline_tugas' => $request->filled(['deadline_tugas_date', 'deadline_tugas_time'])
+                ? $request->deadline_tugas_date . ' ' . $request->deadline_tugas_time
+                : null,
+        ]);
+
+        $request->validate([
             'nama_tugas' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'tanggal_tugas' => 'required|date',
-            'deadline_tugas' => 'required|date|after:tanggal_tugas',
-            'prioritas' => 'required|string',
+            'deadline_tugas' => 'required|date|after_or_equal:tanggal_tugas',
+            'prioritas' => 'required|string|max:200',
+            'kategoritugas' => 'required|string|max:50',
+            'gambar_file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
+            'nama_file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:20480',
+            'link_tugas' => 'nullable|url',
         ]);
 
-        Tugas::create($validated);
+        $dataTugas = $request->only([
+            'nama_tugas', 'deskripsi', 'tanggal_tugas', 'deadline_tugas', 'prioritas', 'kategoritugas'
+        ]);
+
+        $dataTugas['departemen_id'] = auth()->user()->departemen_id;
+        $dataTugas['status_tugas'] = 'Belum Dikerjakan';
+
+        $tugas = Tugas::create($dataTugas);
+
+        $hasGambar = $request->hasFile('gambar_file');
+        $hasDokumen = $request->hasFile('nama_file');
+
+        if ($hasGambar || $hasDokumen || $request->filled('link_tugas')) {
+            $tugas->lampirans()->create([
+                'gambar_file' => $hasGambar ? $request->file('gambar_file')->store('tugas/gambar', 'public') : null,
+                'nama_file' => $hasDokumen ? $request->file('nama_file')->store('tugas/dokumen', 'public') : null,
+                'link_tugas' => $request->link_tugas
+            ]);
+        }
+
         return redirect()->route('tugas.index')->with('success', 'Tugas berhasil dibuat.');
     }
 
-    public function edit($id)
+    public function show(string $id)
     {
-        $tugas = Tugas::findOrFail($id);
+        $departemenId = auth()->user()->departemen_id;
+        $tugas = Tugas::where('departemen_id', $departemenId)->with('lampirans')->findOrFail($id);
+
+        if (auth()->user()->nama_role === 'staff') {
+            return view('staff.tugas.show', compact('tugas'));
+        }
+
+        return view('manager.tugas.show', compact('tugas'));
+    }
+
+    public function edit(string $id)
+    {
+        $departemenId = auth()->user()->departemen_id;
+        $tugas = Tugas::where('departemen_id', $departemenId)->findOrFail($id);
         return view('manager.tugas.edit', compact('tugas'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
-        $tugas = Tugas::findOrFail($id);
-        $validated = $request->validate([
+        $departemenId = auth()->user()->departemen_id;
+        $tugas = Tugas::where('departemen_id', $departemenId)->findOrFail($id);
+
+        $request->validate([
             'nama_tugas' => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'deadline_tugas' => 'required|date',
-            'prioritas' => 'required|string',
+            'tanggal_tugas' => 'required|date',
+            'deadline_tugas' => 'required|date|after_or_equal:tanggal_tugas',
+            'prioritas' => 'required|string|max:200',
+            'status_tugas' => 'required|string|max:50',
+            'kategoritugas' => 'required|string|max:50',
+            'catatan_revisi' => 'nullable|string',
         ]);
 
-        $tugas->update($validated);
+        $tugas->update($request->all());
+
         return redirect()->route('tugas.index')->with('success', 'Tugas berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function reviewTugas(Request $request, string $id)
     {
-        Tugas::findOrFail($id)->delete();
+        $departemenId = auth()->user()->departemen_id;
+        $tugas = Tugas::where('departemen_id', $departemenId)->findOrFail($id);
+
+        $request->validate([
+            'action' => 'required|in:setujui,revisi',
+            'catatan_revisi' => 'required_if:action,revisi|nullable|string',
+        ]);
+
+        if ($request->action === 'setujui') {
+            $tugas->update([
+                'status_tugas' => 'Selesai',
+                'catatan_revisi' => null
+            ]);
+            return redirect()->back()->with('success', 'Tugas berhasil disetujui.');
+        }
+
+        if ($request->action === 'revisi') {
+            $tugas->update([
+                'status_tugas' => 'Revisi',
+                'catatan_revisi' => $request->catatan_revisi
+            ]);
+            return redirect()->back()->with('success', 'Tugas dikembalikan untuk revisi.');
+        }
+    }
+
+    public function destroy(string $id)
+    {
+        $departemenId = auth()->user()->departemen_id;
+        $tugas = Tugas::where('departemen_id', $departemenId)->with('lampirans')->findOrFail($id);
+
+        foreach ($tugas->lampirans as $lampiran) {
+            if ($lampiran->gambar_file) {
+                Storage::disk('public')->delete($lampiran->gambar_file);
+            }
+            if ($lampiran->nama_file) {
+                Storage::disk('public')->delete($lampiran->nama_file);
+            }
+        }
+
+        $tugas->delete();
+
         return redirect()->route('tugas.index')->with('success', 'Tugas berhasil dihapus.');
     }
 
-    public function konfirmasiTerima($id)
+    public function submitTugasForm(string $id)
     {
-        Tugas::findOrFail($id)->update(['status' => 'diterima']);
-        return redirect()->back()->with('success', 'Tugas dikonfirmasi.');
+        $departemenId = auth()->user()->departemen_id;
+        $tugas = Tugas::where('departemen_id', $departemenId)->findOrFail($id);
+        return view('staff.tugas.submit', compact('tugas'));
     }
 
-    public function submitTugas(Request $request, $id)
+    public function submitTugas(Request $request, string $id)
     {
-        $tugas = Tugas::findOrFail($id);
-        if (now()->gt($tugas->deadline_tugas)) {
-            return redirect()->back()->with('error', 'Deadline telah terlewati.');
-        }
+        $departemenId = auth()->user()->departemen_id;
+        $tugas = Tugas::where('departemen_id', $departemenId)->findOrFail($id);
 
-        $validated = $request->validate([
-            'nama_file' => 'nullable|file|mimes:jpg,png,pdf,doc,docx|max:2048',
+        $request->validate([
+            'gambar_file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
+            'nama_file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:20480',
             'link_tugas' => 'nullable|url',
         ]);
 
-        if ($request->hasFile('nama_file')) {
-            $path = $request->file('nama_file')->store('lampiran', 'public');
-            $validated['nama_file'] = $path;
-            $validated['jenis'] = 'file';
-        } else {
-            $validated['jenis'] = 'link';
+        $hasGambar = $request->hasFile('gambar_file');
+        $hasDokumen = $request->hasFile('nama_file');
+
+        if ($hasGambar || $hasDokumen || $request->filled('link_tugas')) {
+            $tugas->lampirans()->create([
+                'gambar_file' => $hasGambar ? $request->file('gambar_file')->store('pengumpulan/gambar', 'public') : null,
+                'nama_file' => $hasDokumen ? $request->file('nama_file')->store('pengumpulan/dokumen', 'public') : null,
+                'link_tugas' => $request->link_tugas
+            ]);
         }
 
-        $validated['tugas_id'] = $id;
-        Lampiran::create($validated);
-
-        return redirect()->back()->with('success', 'Tugas dikumpulkan.');
-    }
-
-    public function updateLampiran(Request $request, $lampiranId)
-    {
-        $lampiran = Lampiran::findOrFail($lampiranId);
-        $tugas = $lampiran->tugas;
-
-        if (now()->gt($tugas->deadline_tugas)) {
-            return redirect()->back()->with('error', 'Deadline terlewati.');
-        }
-
-        $validated = $request->validate([
-            'link_tugas' => 'nullable|url',
+        $tugas->update([
+            'status_tugas' => 'Menunggu Persetujuan'
         ]);
 
-        $lampiran->update($validated);
-        return redirect()->back()->with('success', 'Lampiran diperbarui.');
-    }
-
-    public function hapusSubmit($id)
-    {
-        $lampiran = Lampiran::findOrFail($id);
-        if (now()->gt($lampiran->tugas->deadline_tugas)) {
-            return redirect()->back()->with('error', 'Deadline terlewati.');
-        }
-
-        $lampiran->delete();
-        return redirect()->back()->with('success', 'Pengumpulan dihapus.');
+        return redirect()->route('staff.tugas.index')->with('success', 'Tugas berhasil dikumpulkan.');
     }
 }

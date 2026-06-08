@@ -34,6 +34,14 @@ function initDeleteRowAjax(tableContainerId, fetchUrl) {
         if (form && form.action && form.querySelector('input[name="_method"]')?.value === 'DELETE') {
             e.preventDefault();
 
+            const submitButton = form.querySelector('button[type="submit"]');
+            let originalText = 'Iya';
+            if (submitButton) {
+                originalText = submitButton.innerText;
+                submitButton.disabled = true;
+                submitButton.innerText = 'Memproses...';
+            }
+
             fetch(form.action, {
                 method: 'POST',
                 body: new FormData(form),
@@ -44,12 +52,24 @@ function initDeleteRowAjax(tableContainerId, fetchUrl) {
             })
             .then(response => {
                 if (response.ok) {
+                    const modal = form.closest('[role="dialog"]');
+                    if (modal && typeof closeModal === 'function') {
+                        closeModal(modal.id);
+                    }
                     fetchRealTimeIndex(tableContainerId, fetchUrl);
                 } else {
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.innerText = originalText;
+                    }
                     alert('Gagal menghapus data. Silakan coba lagi.');
                 }
             })
             .catch(error => {
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.innerText = originalText;
+                }
                 console.error('Error deleting data:', error);
             });
         }

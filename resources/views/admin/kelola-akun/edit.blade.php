@@ -74,6 +74,7 @@
                         <option value="" disabled {{ old('status_pegawai', $user->status_pegawai) == '' ? 'selected' : '' }}>Pilih Status Pegawai</option>
                         <option value="magang" {{ old('status_pegawai', $user->status_pegawai) == 'magang' ? 'selected' : '' }}>Magang</option>
                         <option value="tetap" {{ old('status_pegawai', $user->status_pegawai) == 'tetap' ? 'selected' : '' }}>Tetap</option>
+                        <option value="Skorsing" {{ old('status_pegawai', $user->status_pegawai) == 'Skorsing' ? 'selected' : '' }}>Skorsing</option>
                     </select>
                     <p class="text-xs text-red-600 error-msg hidden" id="error-status_pegawai"></p>
                 </div>

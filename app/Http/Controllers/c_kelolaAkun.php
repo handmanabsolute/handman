@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Departemen;
+use App\Mail\RandomPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 
 class c_kelolaAkun extends Controller
@@ -33,7 +36,6 @@ class c_kelolaAkun extends Controller
         $validator = Validator::make($request->all(), [
             'nama_lengkap' => 'required|string|regex:/^[a-zA-Z\s]+$/|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => [ 'required', 'string', Password::min(8)->letters()->mixedCase()->symbols() ],
             'no_telp' => 'required|numeric|digits_between:10,15|unique:users',
             'jenis_kelamin' => 'required|in:L,P',
             'tanggal_lahir' => 'required|date',
@@ -51,11 +53,6 @@ class c_kelolaAkun extends Controller
             'email.email' => 'Format alamat email tidak valid.',
             'email.max' => 'Alamat email maksimal 255 karakter.',
             'email.unique' => 'Alamat email sudah terdaftar di dalam sistem.',
-            'password.required' => 'Password wajib diisi.',
-            'password.string' => 'Password harus berupa teks.',
-            'password.min' => 'Password minimal harus terdiri dari 8 karakter.',
-            'password.mixed' => 'Password harus mengandung kombinasi huruf besar dan huruf kecil.',
-            'password.symbols' => 'Password harus mengandung simbol unik seperti !, @, #, dsb.',
             'no_telp.required' => 'Nomor telepon wajib diisi.',
             'no_telp.numeric' => 'Nomor telepon harus berupa angka.',
             'no_telp.digits_between' => 'Nomor telepon harus terdiri dari 10 hingga 15 digit.',
@@ -84,19 +81,25 @@ class c_kelolaAkun extends Controller
             ], 422);
         }
 
-        User::create([
+        $isActive = ($request->status_pegawai === 'Skorsing') ? 0 : 1;
+        $randomPassword = Str::random(12);
+
+        $user = User::create([
             'nama_lengkap' => $request->nama_lengkap,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($randomPassword),
             'no_telp' => $request->no_telp,
             'jenis_kelamin' => $request->jenis_kelamin,
             'tanggal_lahir' => $request->tanggal_lahir,
             'status_pegawai' => $request->status_pegawai,
+            'is_active' => $isActive,
             'nama_role' => $request->nama_role,
             'departemen_id' => $request->departemen_id,
             'deskripsi_user' => $request->deskripsi_user,
             'alamat' => $request->alamat,
         ]);
+
+        Mail::to($user->email)->send(new RandomPassword($user, $randomPassword));
 
         session()->flash('success', 'User berhasil ditambahkan.');
 
@@ -176,6 +179,9 @@ class c_kelolaAkun extends Controller
         }
 
         $data = $request->except('password');
+
+        $data['is_active'] = ($request->status_pegawai === 'Skorsing') ? 0 : 1;
+
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }

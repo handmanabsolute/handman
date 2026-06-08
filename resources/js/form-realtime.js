@@ -1,10 +1,33 @@
 function executeGlobalAjaxSubmit(formId, modalId) {
-    if (typeof closeModal === 'function') {
-        closeModal(modalId);
+    const modal = document.getElementById(modalId);
+    let confirmBtn = null;
+    let cancelBtn = null;
+    let originalConfirmText = 'Iya';
+
+    if (modal) {
+        confirmBtn = modal.querySelector('button[onclick*="executeGlobalAjaxSubmit"]');
+        cancelBtn = modal.querySelector('button[onclick*="closeModal"]');
+        if (confirmBtn) {
+            originalConfirmText = confirmBtn.innerText;
+            confirmBtn.disabled = true;
+            confirmBtn.innerText = 'Memproses...';
+        }
+        if (cancelBtn) {
+            cancelBtn.disabled = true;
+        }
     }
 
     const form = document.getElementById(formId);
-    if (!form) return;
+    if (!form) {
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerText = originalConfirmText;
+        }
+        if (cancelBtn) {
+            cancelBtn.disabled = false;
+        }
+        return;
+    }
 
     const formData = new FormData(form);
     const fallbackRedirect = form.getAttribute('data-redirect');
@@ -18,24 +41,50 @@ function executeGlobalAjaxSubmit(formId, modalId) {
             'Accept': 'application/json'
         }
     })
-    .then(async response => {
-        const data = await response.json();
-        if (response.ok) {
-            window.location.href = data.redirect || fallbackRedirect;
-        } else if (response.status === 422) {
-            if (data.errors) {
-                Object.keys(data.errors).forEach(key => {
-                    showFormFieldError(form, key, data.errors[key][0]);
-                });
+        .then(async response => {
+            const data = await response.json();
+
+            if (typeof closeModal === 'function' && modalId) {
+                closeModal(modalId);
             }
-        } else {
-            alert('Terjadi kesalahan pada sistem. Silakan coba lagi.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Gagal mengirim data.');
-    });
+
+            if (response.ok) {
+                window.location.href = data.redirect || fallbackRedirect;
+            } else {
+                // Restore button states in case modal is reopened or form needs correction
+                if (confirmBtn) {
+                    confirmBtn.disabled = false;
+                    confirmBtn.innerText = originalConfirmText;
+                }
+                if (cancelBtn) {
+                    cancelBtn.disabled = false;
+                }
+
+                if (response.status === 422) {
+                    if (data.errors) {
+                        Object.keys(data.errors).forEach(key => {
+                            showFormFieldError(form, key, data.errors[key][0]);
+                        });
+                    }
+                } else {
+                    alert('Terjadi kesalahan pada sistem. Silakan coba lagi.');
+                }
+            }
+        })
+        .catch(error => {
+            if (typeof closeModal === 'function' && modalId) {
+                closeModal(modalId);
+            }
+            if (confirmBtn) {
+                confirmBtn.disabled = false;
+                confirmBtn.innerText = originalConfirmText;
+            }
+            if (cancelBtn) {
+                cancelBtn.disabled = false;
+            }
+            console.error('Error:', error);
+            alert('Gagal mengirim data.');
+        });
 }
 
 function initRealTimeValidation(formId) {
@@ -57,19 +106,19 @@ function initRealTimeValidation(formId) {
                     'X-Validate-Only': 'true'
                 }
             })
-            .then(async response => {
-                if (response.ok) {
-                    const data = await response.json();
-                    const fieldName = field.name;
+                .then(async response => {
+                    if (response.ok) {
+                        const data = await response.json();
+                        const fieldName = field.name;
 
-                    if (data.valid === false && data.errors && data.errors[fieldName]) {
-                        showFormFieldError(form, fieldName, data.errors[fieldName][0]);
-                    } else if (data.valid === true || !data.errors || !data.errors[fieldName]) {
-                        clearSingleFormError(form, fieldName);
+                        if (data.valid === false && data.errors && data.errors[fieldName]) {
+                            showFormFieldError(form, fieldName, data.errors[fieldName][0]);
+                        } else if (data.valid === true || !data.errors || !data.errors[fieldName]) {
+                            clearSingleFormError(form, fieldName);
+                        }
                     }
-                }
-            })
-            .catch(() => {});
+                })
+                .catch(() => { });
         });
     });
 }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('foto_profil', 255)->nullable();
             $table->string('status_pegawai', 255)->nullable();
             $table->string('alamat', 300)->nullable();
+            $table->boolean('is_active')->default(1);
             $table->enum('nama_role', ['admin', 'manager', 'staff']);
             $table->text('deskripsi_user')->nullable();
             $table->foreignUlid('departemen_id')->nullable()->constrained('departemens')->nullOnDelete();
