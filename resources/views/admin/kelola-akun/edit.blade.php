@@ -36,17 +36,6 @@
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="text-sm font-medium text-gray-700">Password <span class="text-xs text-gray-400 font-normal">(Kosongkan jika tidak ingin diubah)</span></label>
-                    <div class="relative w-full">
-                        <input type="password" id="password" name="password" class="w-full px-4 py-2.5 pr-11 text-sm text-gray-800 bg-white border border-gray-200 rounded-xl focus:border-[#3B28CC] focus:ring-1 focus:ring-[#3B28CC] outline-none transition-all">
-                        <button type="button" onclick="const p = document.getElementById('password'); p.type = p.type === 'password' ? 'text' : 'password'; this.querySelector('i').classList.toggle('fa-eye'); this.querySelector('i').classList.toggle('fa-eye-slash');" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
-                            <i class="fa-solid fa-eye text-sm"></i>
-                        </button>
-                    </div>
-                    <p class="text-xs text-red-600 error-msg hidden" id="error-password"></p>
-                </div>
-
-                <div class="space-y-1.5">
                     <label class="text-sm font-medium text-gray-700">No. Telepon</label>
                     <input type="text" name="no_telp" value="{{ old('no_telp', $user->no_telp) }}" required class="w-full px-4 py-2.5 text-sm text-gray-800 bg-white border border-gray-200 rounded-xl focus:border-[#3B28CC] focus:ring-1 focus:ring-[#3B28CC] outline-none transition-all">
                     <p class="text-xs text-red-600 error-msg hidden" id="error-no_telp"></p>
@@ -89,7 +78,7 @@
                     <p class="text-xs text-red-600 error-msg hidden" id="error-nama_role"></p>
                 </div>
 
-                <div class="space-y-1.5 md:col-span-2">
+                <div class="space-y-1.5">
                     <label class="text-sm font-medium text-gray-700">Departemen</label>
                     <select name="departemen_id" required class="w-full px-4 py-2.5 text-sm text-gray-800 bg-white border border-gray-200 rounded-xl focus:border-[#3B28CC] focus:ring-1 focus:ring-[#3B28CC] outline-none transition-all">
                         <option value="" disabled {{ old('departemen_id', $user->departemen_id) == '' ? 'selected' : '' }}>Pilih Departemen</option>

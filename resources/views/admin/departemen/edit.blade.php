@@ -30,7 +30,7 @@
 
                 <div class="space-y-1.5">
                     <label class="text-sm font-medium text-gray-700">Deskripsi <span class="text-xs text-gray-400 font-normal">(Opsional)</span></label>
-                    <textarea name="deskripsi" rows="4" placeholder="Tuliskan deskripsi singkat..." class="w-full px-4 py-2.5 text-sm text-gray-800 bg-white border border-gray-200 rounded-xl focus:border-[#3B28CC] focus:ring-1 focus:ring-[#3B28CC] outline-none transition-all">{{ old('deskripsi', $departemen->deskripsi) }}</textarea>
+                    <textarea name="deskripsi" rows="4" placeholder="Tuliskan deskripsi singkat..." class="w-full px-4 py-2.5 text-sm text-gray-800 bg-white border border-gray-200 rounded-xl focus:border-[#3B28CC] focus:ring-1 focus:ring-[#3B28CC] outline-none transition-all">{{ old('deskripsi', $departemen->deskripsi_departemen) }}</textarea>
                     <p class="text-xs text-red-600 error-msg hidden" id="error-deskripsi"></p>
                 </div>
             </div>

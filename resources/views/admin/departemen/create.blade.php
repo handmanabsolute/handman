@@ -65,7 +65,7 @@
                         @forelse($departemens ?? \App\Models\Departemen::all() as $dept)
                             <tr class="hover:bg-gray-50/50 transition-colors">
                                 <td class="px-6 py-4 font-medium text-gray-900">{{ $dept->nama_departemen }}</td>
-                                <td class="px-6 py-4 text-gray-500 max-w-xs truncate">{{ $dept->deskripsi ?? '-' }}</td>
+                                <td class="px-6 py-4 text-gray-500 max-w-xs truncate">{{ $dept->deskripsi_departemen ?? '-' }}</td>
                                 <td class="px-6 py-4 text-right space-x-2 whitespace-nowrap">
                                     <a href="{{ route('departemen.edit', $dept->id) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 bg-gray-50 border border-gray-200 hover:text-[#3B28CC] hover:bg-indigo-50 hover:border-indigo-200 transition-all">
                                         <i class="fa-solid fa-pen-to-square text-xs"></i>

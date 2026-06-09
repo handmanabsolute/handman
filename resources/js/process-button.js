@@ -7,5 +7,13 @@ document.addEventListener('DOMContentLoaded', function () {
             submitButton.disabled = true;
             submitButton.innerText = 'Memproses...';
         }
+
+        // Disable all other buttons in the form or inside its parent modal/card container
+        const container = form.closest('[role="dialog"]') || form.closest('.fixed') || form.closest('.bg-white') || form;
+        container.querySelectorAll('button').forEach(btn => {
+            if (btn !== submitButton) {
+                btn.disabled = true;
+            }
+        });
     });
 });

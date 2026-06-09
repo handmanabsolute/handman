@@ -9,55 +9,66 @@
             <p class="text-sm text-gray-500 mt-0.5">Perbarui informasi profil dan unggah foto profil baru Anda.</p>
         </div>
         <div>
-            <a href="{{ route('profil.show') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 rounded-xl shadow-sm transition-colors gap-2">
+            <a href="{{ route('profil.show') }}" class="inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 rounded-xl shadow-sm transition-colors gap-2">
                 <i class="fa-solid fa-arrow-left text-xs"></i>
                 Kembali
             </a>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+    
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         
-        <!-- Left Panel: Profile Photo Upload Card -->
-        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center text-center space-y-5">
-            <h3 class="text-sm font-bold text-gray-900 self-start">Foto Profil</h3>
+        <div class="h-2 bg-[#3B28CC]"></div>
+        
+        <form id="form-profil" action="{{ route('profil.update') }}" method="POST" enctype="multipart/form-data" class="p-6 sm:p-8 space-y-8" data-redirect="{{ route('profil.show') }}" novalidate>
+            @csrf
+            @method('PUT')
+
             
-            <div class="relative group">
-                @if($user->foto_profil)
-                    <img id="avatar-preview" src="{{ asset('storage/' . $user->foto_profil) }}" alt="Avatar" class="w-32 h-32 rounded-full object-cover shadow-md border-4 border-indigo-50 transition-opacity group-hover:opacity-95">
-                @else
-                    <img id="avatar-preview" src="https://ui-avatars.com/api/?name={{ urlencode($user->nama_lengkap ?? $user->email) }}&background=3B28CC&color=fff&size=128" alt="Avatar" class="w-32 h-32 rounded-full object-cover shadow-md border-4 border-indigo-50 transition-opacity group-hover:opacity-95">
-                @endif
+            <input type="file" id="foto_profil_input" name="foto_profil" accept="image/*" onchange="previewImage(event)" class="hidden">
+
+            
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
                 
-                <label for="foto_profil_input" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                    <span class="text-white text-xs font-semibold flex flex-col items-center gap-1">
-                        <i class="fa-solid fa-camera text-base"></i>
-                        Ubah Foto
-                    </span>
-                </label>
+                <div class="relative group shrink-0">
+                    @if($user->foto_profil)
+                        <img id="avatar-preview" src="{{ asset('storage/' . $user->foto_profil) }}" alt="Avatar" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shadow-md border-4 border-indigo-50 transition-opacity group-hover:opacity-95">
+                    @else
+                        <img id="avatar-preview" src="https://ui-avatars.com/api/?name={{ urlencode($user->nama_lengkap ?? $user->email) }}&background=3B28CC&color=fff&size=128" alt="Avatar" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shadow-md border-4 border-indigo-50 transition-opacity group-hover:opacity-95">
+                    @endif
+                    
+                    <label for="foto_profil_input" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                        <span class="text-white text-xs font-semibold flex flex-col items-center gap-1">
+                            <i class="fa-solid fa-camera text-base"></i>
+                            Ubah Foto
+                        </span>
+                    </label>
+                </div>
+
+                
+                <div class="flex-1 text-center md:text-left space-y-2">
+                    <h3 class="text-lg font-bold text-gray-900">Foto Profil</h3>
+                    <p class="text-xs text-gray-405 max-w-md">Pilih file foto berformat JPG, JPEG, PNG, atau WEBP dengan ukuran maksimum 2MB.</p>
+                    <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-foto_profil"></p>
+                </div>
             </div>
+
             
-            <div class="space-y-1">
-                <p class="text-xs text-gray-400">Pilih file foto berformat JPG, JPEG, PNG, atau WEBP dengan ukuran maksimum 2MB.</p>
-                <p class="text-xs text-red-600 error-msg hidden" id="error-foto_profil"></p>
-            </div>
-        </div>
+            <div class="border-t border-gray-100"></div>
 
-        <!-- Right Panel: Profil Edit Form -->
-        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm lg:col-span-2">
-            <!-- Note the enctype attribute is mandatory for file uploads -->
-            <form id="form-profil" action="{{ route('profil.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6" data-redirect="{{ route('profil.show') }}" novalidate>
-                @csrf
-                @method('PUT')
-
-                <!-- Hidden file input triggered by avatar label -->
-                <input type="file" id="foto_profil_input" name="foto_profil" accept="image/*" onchange="previewImage(event)" class="hidden">
-
-                <h3 class="text-base font-bold text-gray-900 border-b border-gray-100 pb-3">Informasi Akun</h3>
+            
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-user-gear text-[#3B28CC]"></i>
+                        Informasi Akun
+                    </h3>
+                </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     @if($user->nama_role === 'admin')
-                        <!-- Admin Profile Fields -->
+                        
                         <div class="space-y-1.5 md:col-span-2">
                             <label class="text-sm font-medium text-gray-700">Email</label>
                             <input type="email" value="{{ $user->email }}" disabled class="w-full px-4 py-2.5 mt-1.5 text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-xl outline-none cursor-not-allowed">
@@ -74,7 +85,7 @@
                             <p class="text-xs text-red-600 error-msg hidden" id="error-password"></p>
                         </div>
                     @else
-                        <!-- Manager / Staff Profile Fields -->
+                        
                         <div class="space-y-1.5">
                             <label class="text-sm font-medium text-gray-500">Nama Lengkap</label>
                             <input type="text" value="{{ $user->nama_lengkap }}" disabled class="w-full px-4 py-2.5 mt-1.5 text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-xl outline-none cursor-not-allowed">
@@ -145,15 +156,15 @@
                         </div>
                     @endif
                 </div>
+            </div>
 
-                <div class="flex items-center justify-end pt-4 border-t border-gray-100">
-                    <button type="button" onclick="openModal('confirm-profil')" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-[#3B28CC] hover:bg-opacity-90 rounded-xl shadow-sm transition-colors cursor-pointer">
-                        Simpan Perubahan
-                    </button>
-                </div>
-            </form>
-        </div>
-
+            
+            <div class="flex items-center justify-end pt-6 border-t border-gray-100">
+                <button type="button" onclick="openModal('confirm-profil')" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-[#3B28CC] hover:bg-opacity-90 rounded-xl shadow-sm transition-colors cursor-pointer">
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
     </div>
 
 </div>

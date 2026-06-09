@@ -112,7 +112,7 @@
                     <a href="{{ route('staff.tugas.show', $tugas->id) }}" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 rounded-xl transition-colors">
                         Batal
                     </a>
-                    <button type="submit" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-[#3B28CC] hover:bg-opacity-90 rounded-xl shadow-sm transition-colors gap-2">
+                    <button type="submit" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-[#3B28CC] hover:bg-opacity-90 rounded-xl shadow-sm transition-colors gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed">
                         <i class="fa-solid fa-paper-plane text-xs"></i>
                         Kirim Tugas Sekarang
                     </button>

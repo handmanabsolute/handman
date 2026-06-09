@@ -30,7 +30,7 @@
                     @enderror
                 </div>
 
-                <button type="submit" id="verify_button" class="w-full bg-[#3B28CC] hover:bg-[#2A1BA3] text-white font-medium py-3 rounded-full transition shadow-lg shadow-indigo-100 mt-2 cursor-pointer">
+                <button type="submit" id="verify_button" class="w-full bg-[#3B28CC] hover:bg-[#2A1BA3] disabled:bg-gray-400 text-white font-medium py-3 rounded-full transition shadow-lg shadow-indigo-100 mt-2 cursor-pointer disabled:cursor-not-allowed">
                     Verifikasi OTP
                 </button>
             </form>

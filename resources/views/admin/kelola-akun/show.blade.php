@@ -16,63 +16,98 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        
+        <div class="h-2 bg-[#3B28CC]"></div>
+        
+        <div class="p-6 sm:p-8 space-y-8">
+            
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+                
+                <div class="relative shrink-0">
+                    @if($user->foto_profil)
+                        <img src="{{ asset('storage/' . $user->foto_profil) }}" alt="Avatar" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shadow-sm border-4 border-indigo-50 bg-white">
+                    @else
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode($user->nama_lengkap ?? $user->email) }}&background=3B28CC&color=fff&size=128" alt="Avatar" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover shadow-sm border-4 border-indigo-50">
+                    @endif
+                </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center text-center space-y-4">
-            <div class="w-24 h-24 bg-indigo-50 rounded-2xl flex items-center justify-center text-[#3B28CC] border border-indigo-100">
-                @if($user->foto_profil)
-                    <img src="{{ asset('storage/' . $user->foto_profil) }}" alt="Profil" class="w-full h-full object-cover rounded-2xl">
-                @else
-                    <i class="fa-solid fa-user text-4xl"></i>
-                @endif
+                
+                <div class="flex-1 text-center md:text-left space-y-3">
+                    <div class="space-y-1">
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-900">{{ $user->nama_lengkap }}</h2>
+                        <p class="text-sm text-gray-500 font-medium">{{ $user->email }}</p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 justify-center md:justify-start pt-1">
+                        <span class="px-3 py-1 text-xs font-semibold bg-purple-50 text-purple-700 rounded-full border border-purple-100 uppercase tracking-wider">
+                            {{ $user->nama_role }}
+                        </span>
+                        <span class="px-3 py-1 text-xs font-semibold bg-indigo-50 text-[#3B28CC] rounded-full border border-indigo-100">
+                            {{ $user->departemen->nama_departemen ?? '-' }}
+                        </span>
+                        <span class="px-3 py-1 text-xs font-semibold bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100 capitalize">
+                            {{ $user->status_pegawai }}
+                        </span>
+                    </div>
+
+                    @if($user->deskripsi_user)
+                        <div class="pt-3 max-w-2xl text-sm text-gray-600 leading-relaxed mx-auto md:mx-0">
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Deskripsi User</span>
+                            {{ $user->deskripsi_user }}
+                        </div>
+                    @endif
+                </div>
             </div>
-            <div>
-                <h2 class="text-lg font-bold text-gray-800">{{ $user->nama_lengkap }}</h2>
-                <span class="inline-block mt-1 px-2.5 py-0.5 text-xs font-medium bg-purple-50 text-purple-700 rounded-lg">{{ $user->nama_role }}</span>
+
+            
+            <div class="border-t border-gray-100"></div>
+
+            
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                        <i class="fa-solid fa-address-card text-[#3B28CC]"></i>
+                        Detail Informasi Pengguna
+                    </h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+
+                    <div class="space-y-1 p-4 bg-gray-50/50 rounded-xl border border-gray-100">
+                        <span class="text-xs font-medium text-gray-400 uppercase tracking-wider block">Email Utama</span>
+                        <p class="text-sm font-semibold text-gray-800">{{ $user->email }}</p>
+                    </div>
+
+                    <div class="space-y-1 p-4 bg-gray-50/50 rounded-xl border border-gray-100">
+                        <span class="text-xs font-medium text-gray-400 uppercase tracking-wider block">No. Telepon</span>
+                        <p class="text-sm font-semibold text-gray-800">{{ $user->no_telp ?? '-' }}</p>
+                    </div>
+
+                    <div class="space-y-1 p-4 bg-gray-50/50 rounded-xl border border-gray-100">
+                        <span class="text-xs font-medium text-gray-400 uppercase tracking-wider block">Jenis Kelamin</span>
+                        <p class="text-sm font-semibold text-gray-800">{{ $user->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</p>
+                    </div>
+
+                    <div class="space-y-1 p-4 bg-gray-50/50 rounded-xl border border-gray-100">
+                        <span class="text-xs font-medium text-gray-400 uppercase tracking-wider block">Tanggal Lahir</span>
+                        <p class="text-sm font-semibold text-gray-800">{{ $user->tanggal_lahir ? $user->tanggal_lahir->format('d F Y') : '-' }}</p>
+                    </div>
+
+                    <div class="space-y-1 p-4 bg-gray-50/50 rounded-xl border border-gray-100">
+                        <span class="text-xs font-medium text-gray-400 uppercase tracking-wider block">Status Pegawai</span>
+                        <p class="text-sm font-semibold text-gray-800 capitalize">{{ $user->status_pegawai }}</p>
+                    </div>
+
+                    <div class="space-y-1 p-4 bg-gray-50/50 rounded-xl border border-gray-100 md:col-span-2 lg:col-span-3">
+                        <span class="text-xs font-medium text-gray-400 uppercase tracking-wider block">Alamat Tempat Tinggal</span>
+                        <p class="text-sm font-semibold text-gray-800 leading-relaxed">{{ $user->alamat ?? '-' }}</p>
+                    </div>
+
+                </div>
             </div>
-            <p class="text-sm text-gray-400 max-w-xs">{{ $user->deskripsi_user ?? 'Tidak ada deskripsi tambahan mengenai pengguna ini.' }}</p>
         </div>
-
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden lg:col-span-2">
-            <div class="p-5 border-b border-gray-50">
-                <h3 class="font-bold text-gray-800">Informasi Pribadi & Pekerjaan</h3>
-            </div>
-            <div class="divide-y divide-gray-50">
-                <div class="grid grid-cols-3 p-4 text-sm">
-                    <span class="font-medium text-gray-400">ID Pengguna (ULID)</span>
-                    <span class="col-span-2 text-gray-800 font-mono text-xs">{{ $user->id }}</span>
-                </div>
-                <div class="grid grid-cols-3 p-4 text-sm">
-                    <span class="font-medium text-gray-400">Email Utama</span>
-                    <span class="col-span-2 text-gray-800">{{ $user->email }}</span>
-                </div>
-                <div class="grid grid-cols-3 p-4 text-sm">
-                    <span class="font-medium text-gray-400">No. Telepon</span>
-                    <span class="col-span-2 text-gray-800">{{ $user->no_telp ?? '-' }}</span>
-                </div>
-                <div class="grid grid-cols-3 p-4 text-sm">
-                    <span class="font-medium text-gray-400">Jenis Kelamin</span>
-                    <span class="col-span-2 text-gray-800">{{ $user->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }}</span>
-                </div>
-                <div class="grid grid-cols-3 p-4 text-sm">
-                    <span class="font-medium text-gray-400">Tanggal Lahir</span>
-                    <span class="col-span-2 text-gray-800">{{ $user->tanggal_lahir ? $user->tanggal_lahir->format('d F Y') : '-' }}</span>
-                </div>
-                <div class="grid grid-cols-3 p-4 text-sm">
-                    <span class="font-medium text-gray-400">Departemen</span>
-                    <span class="col-span-2 text-gray-800 font-semibold">{{ $user->departemen->nama_departemen ?? '-' }}</span>
-                </div>
-                <div class="grid grid-cols-3 p-4 text-sm">
-                    <span class="font-medium text-gray-400">Status Pegawai</span>
-                    <span class="col-span-2 text-gray-800">{{ $user->status_pegawai }}</span>
-                </div>
-                <div class="grid grid-cols-3 p-4 text-sm">
-                    <span class="font-medium text-gray-400">Alamat Tempat Tinggal</span>
-                    <span class="col-span-2 text-gray-800">{{ $user->alamat ?? '-' }}</span>
-                </div>
-            </div>
-        </div>
-
     </div>
 
 </div>

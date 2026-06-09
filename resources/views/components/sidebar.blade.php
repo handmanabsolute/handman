@@ -1,4 +1,4 @@
-<div id="sidebar" class="pt-17 -translate-x-full fixed inset-y-0 left-0 z-20 w-64 bg-blue-600 text-blue-100 transform md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col justify-between border-r border-blue-700/50">
+<div id="sidebar" class="pt-17 -translate-x-full fixed inset-y-0 left-0 z-20 w-64 bg-[#3B28CC] text-blue-100 transform md:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col justify-between border-r border-blue-700/50">
     <div>
         <div class="px-4 pt-6">
             <div class="flex items-center justify-between p-3 bg-white/10 rounded-2xl border border-white/10 backdrop-blur-sm">
@@ -40,7 +40,7 @@
                     Kelola Tugas
                 </a>
 
-                <a href="#"
+                <a href="{{ route('jadwal.index') }}"
                    class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('jadwal.*') ? 'text-white font-semibold bg-white/15 shadow-sm' : 'text-blue-100 hover:bg-white/10 hover:text-white' }}">
                     <i class="fa-regular fa-calendar w-5 text-center mr-3 {{ request()->routeIs('jadwal.*') ? 'text-white' : 'text-blue-200 group-hover:text-white' }}"></i>
                     Kelola Jadwal

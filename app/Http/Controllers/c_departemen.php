@@ -41,7 +41,7 @@ class c_departemen extends Controller
 
         Departemen::create([
             'nama_departemen' => $request->nama_departemen,
-            'deskripsi' => $request->deskripsi,
+            'deskripsi_departemen' => $request->deskripsi,
         ]);
 
         session()->flash('success', 'Departemen baru berhasil ditambahkan.');
@@ -87,7 +87,7 @@ class c_departemen extends Controller
 
         $departemen->update([
             'nama_departemen' => $request->nama_departemen,
-            'deskripsi' => $request->deskripsi,
+            'deskripsi_departemen' => $request->deskripsi,
         ]);
 
         session()->flash('success', 'Departemen berhasil diperbarui.');

@@ -64,6 +64,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/manager/dashboard', function () { return view('manager.dashboard'); })->name('manager.dashboard');
         Route::resource('tugas', c_kelolaTugas::class);
         Route::put('/tugas/{id}/review', [c_kelolaTugas::class, 'reviewTugas'])->name('tugas.review');
+        
+        // Kelola Jadwal Manager
+        Route::get('/jadwal', [\App\Http\Controllers\c_kelolaJadwal::class, 'index'])->name('jadwal.index');
+        Route::post('/jadwal/notes', [\App\Http\Controllers\c_kelolaJadwal::class, 'storeNote'])->name('jadwal.notes.store');
+        Route::put('/jadwal/notes/{id}', [\App\Http\Controllers\c_kelolaJadwal::class, 'updateNote'])->name('jadwal.notes.update');
+        Route::delete('/jadwal/notes/{id}', [\App\Http\Controllers\c_kelolaJadwal::class, 'destroyNote'])->name('jadwal.notes.destroy');
     });
 
     Route::middleware('role:staff')->group(function () {

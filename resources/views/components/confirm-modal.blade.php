@@ -31,19 +31,19 @@
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
                 @if(str_contains($action, 'executeGlobalAjaxSubmit'))
-                    <button type="button" onclick="{{ $action }}" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 text-sm font-medium text-white sm:w-auto transition-colors cursor-pointer {{ $type === 'danger' ? 'bg-red-600 hover:bg-red-700' : 'bg-[#3B28CC] hover:bg-opacity-90' }}">
+                    <button type="button" onclick="{{ $action }}" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 text-sm font-medium text-white sm:w-auto transition-colors cursor-pointer {{ $type === 'danger' ? 'bg-red-600 hover:bg-red-700' : 'bg-[#3B28CC] hover:bg-opacity-90' }} disabled:bg-gray-400 disabled:cursor-not-allowed">
                         Iya
                     </button>
                 @else
                     <form action="{{ $action }}" method="POST" class="inline-block w-full sm:w-auto m-0">
                         @csrf
                         @method($method)
-                        <button type="submit" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 text-sm font-medium text-white sm:w-auto transition-colors cursor-pointer {{ $type === 'danger' ? 'bg-red-600 hover:bg-red-700' : 'bg-[#3B28CC] hover:bg-opacity-90' }}">
+                        <button type="submit" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 text-sm font-medium text-white sm:w-auto transition-colors cursor-pointer {{ $type === 'danger' ? 'bg-red-600 hover:bg-red-700' : 'bg-[#3B28CC] hover:bg-opacity-90' }} disabled:bg-gray-400 disabled:cursor-not-allowed">
                             Iya
                         </button>
                     </form>
                 @endif
-                <button type="button" onclick="closeModal('{{ $id }}')" class="mt-3 sm:mt-0 w-full inline-flex justify-center rounded-xl border border-gray-200 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 sm:w-auto transition-colors cursor-pointer">
+                <button type="button" onclick="closeModal('{{ $id }}')" class="mt-3 sm:mt-0 w-full inline-flex justify-center rounded-xl border border-gray-200 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 sm:w-auto transition-colors cursor-pointer disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
                     Batal
                 </button>
             </div>

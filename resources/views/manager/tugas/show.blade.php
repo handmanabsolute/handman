@@ -217,15 +217,15 @@
                                         @csrf
                                         @method('PUT')
                                         <input type="hidden" name="action" value="setujui">
-                                        <button type="submit" class="w-full bg-green-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-green-700 transition-colors flex items-center justify-center gap-1.5 shadow-xs">
+                                        <button type="submit" class="w-full bg-green-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-green-700 transition-colors flex items-center justify-center gap-1.5 shadow-xs disabled:bg-gray-400 disabled:cursor-not-allowed">
                                             <i class="fa-regular fa-circle-check text-sm"></i> Setujui Tugas
                                         </button>
                                     </form>
-                                    <button type="button" id="btn_buka_revisi" class="flex-1 bg-amber-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-amber-600 transition-colors flex items-center justify-center gap-1.5 shadow-xs">
+                                    <button type="button" id="btn_buka_revisi" class="flex-1 bg-amber-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-amber-600 transition-colors flex items-center justify-center gap-1.5 shadow-xs disabled:bg-gray-400 disabled:cursor-not-allowed">
                                         <i class="fa-solid fa-arrow-rotate-left"></i> Ajukan Revisi
                                     </button>
                                 </div>
-
+ 
                                 <form id="form_revisi" action="{{ route('tugas.review', $tugas->id) }}" method="POST" class="hidden border border-amber-200 bg-amber-50/30 rounded-xl p-4 space-y-3">
                                     @csrf
                                     @method('PUT')
@@ -235,8 +235,8 @@
                                         <textarea name="catatan_revisi" rows="3" placeholder="Tulis instruksi perbaikan untuk staff di sini....." class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500" required>{{ old('catatan_revisi', $tugas->catatan_revisi) }}</textarea>
                                     </div>
                                     <div class="flex items-center justify-end gap-2">
-                                        <button type="button" id="btn_batal_revisi" class="px-3 py-1.5 border border-gray-200 text-gray-600 bg-white rounded-lg text-xs font-semibold hover:bg-gray-50 transition-colors">Batal</button>
-                                        <button type="submit" class="px-3 py-1.5 bg-amber-500 text-white rounded-lg text-xs font-semibold hover:bg-amber-600 transition-colors">Kirim Revisi</button>
+                                        <button type="button" id="btn_batal_revisi" class="px-3 py-1.5 border border-gray-200 text-gray-600 bg-white rounded-lg text-xs font-semibold hover:bg-gray-50 transition-colors disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">Batal</button>
+                                        <button type="submit" class="px-3 py-1.5 bg-amber-500 text-white rounded-lg text-xs font-semibold hover:bg-amber-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">Kirim Revisi</button>
                                     </div>
                                 </form>
                             @elseif($tugas->status_tugas === 'Selesai')

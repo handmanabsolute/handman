@@ -128,7 +128,6 @@ class c_kelolaAkun extends Controller
         $validator = Validator::make($request->all(), [
             'nama_lengkap' => 'required|string|regex:/^[a-zA-Z\s]+$/|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-            'password' => [ 'nullable', 'string', Password::min(8)->letters()->mixedCase()->symbols() ],
             'no_telp' => 'required|numeric|digits_between:10,15|unique:users,no_telp,' . $id,
             'jenis_kelamin' => 'required|in:L,P',
             'tanggal_lahir' => 'required|date',
@@ -145,10 +144,6 @@ class c_kelolaAkun extends Controller
             'email.string' => 'Alamat email harus berupa teks.',
             'email.email' => 'Format alamat email tidak valid.',
             'email.unique' => 'Alamat email sudah terdaftar di dalam sistem.',
-            'password.string' => 'Password harus berupa teks.',
-            'password.min' => 'Password minimal harus terdiri dari 8 karakter.',
-            'password.mixed' => 'Password harus mengandung kombinasi huruf besar dan huruf kecil.',
-            'password.symbols' => 'Password harus mengandung simbol unik seperti !, @, #, dsb.',
             'no_telp.required' => 'Nomor telepon wajib diisi.',
             'no_telp.numeric' => 'Nomor telepon harus berupa angka.',
             'no_telp.digits_between' => 'Nomor telepon harus terdiri dari 10 hingga 15 digit.',
@@ -178,13 +173,9 @@ class c_kelolaAkun extends Controller
             ], 422);
         }
 
-        $data = $request->except('password');
+        $data = $request->all();
 
         $data['is_active'] = ($request->status_pegawai === 'Skorsing') ? 0 : 1;
-
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        }
 
         $user->update($data);
 

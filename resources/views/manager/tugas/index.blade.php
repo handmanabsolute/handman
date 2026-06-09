@@ -66,7 +66,7 @@
                                 <form action="{{ route('tugas.destroy', $t->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus tugas ini?')" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Hapus">
+                                    <button type="submit" class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all disabled:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed" title="Hapus">
                                         <i class="fa-solid fa-trash-can text-base"></i>
                                     </button>
                                 </form>

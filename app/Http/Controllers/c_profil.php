@@ -2,34 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class c_profil extends Controller
 {
     public function show()
     {
         $user = Auth::user();
+
         return view('profil.show', compact('user'));
     }
 
     public function edit()
     {
         $user = Auth::user();
+
         return view('profil.edit', compact('user'));
     }
 
     public function update(Request $request)
     {
-        /** @var \App\Models\User $user */
+
         $user = Auth::user();
 
-        // 1. Initial Validation Rules & Messages
         $rules = [];
         $messages = [];
 
@@ -47,9 +47,9 @@ class c_profil extends Controller
             $messages['password.mixed'] = 'Password harus mengandung kombinasi huruf besar dan huruf kecil.';
             $messages['password.symbols'] = 'Password harus mengandung simbol unik seperti !, @, #, dsb.';
         } else {
-            // manager or staff
+
             $rules = array_merge($rules, [
-                'no_telp' => 'required|numeric|digits_between:10,15|unique:users,no_telp,' . $user->id,
+                'no_telp' => 'required|numeric|digits_between:10,15|unique:users,no_telp,'.$user->id,
                 'jenis_kelamin' => 'required|in:L,P',
                 'tanggal_lahir' => 'required|date',
                 'alamat' => 'required|string',
@@ -79,38 +79,37 @@ class c_profil extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'valid' => false,
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 200);
             }
+
             return response()->json(['valid' => true], 200);
         }
 
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
-        // 2. Process File Upload (foto_profil)
         if ($request->hasFile('foto_profil')) {
-            // Delete old photo if it exists
+
             if ($user->foto_profil) {
                 Storage::disk('public')->delete($user->foto_profil);
             }
-            // Store new photo
+
             $path = $request->file('foto_profil')->store('profil', 'public');
             $user->foto_profil = $path;
             $user->save();
         }
 
-        // 3. Process Text Updates
         if ($user->nama_role === 'admin') {
             if ($request->filled('password')) {
                 $user->password = Hash::make($request->password);
             }
             $user->save();
         } else {
-            // manager or staff
+
             $data = $request->only(['no_telp', 'jenis_kelamin', 'tanggal_lahir', 'alamat', 'deskripsi_user']);
             if ($request->filled('password')) {
                 $data['password'] = Hash::make($request->password);
@@ -121,7 +120,7 @@ class c_profil extends Controller
         session()->flash('success', 'Profil berhasil diperbarui.');
 
         return response()->json([
-            'redirect' => route('profil.show')
+            'redirect' => route('profil.show'),
         ], 200);
     }
 }
