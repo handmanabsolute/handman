@@ -86,7 +86,7 @@
                 <div class="flex flex-wrap gap-3 items-end">
 
 
-                    <div class="flex-1 min-w-[200px]">
+                    <div class="flex-1 min-w-50">
                         <label class="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Status Pegawai</label>
                         <select name="status" id="filter-status" class="w-full py-2 px-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all appearance-none cursor-pointer">
                             <option value="">Semua Status</option>
@@ -306,7 +306,7 @@
 </div>
 
 
-<div id="modal-grup" class="fixed inset-0 z-[60] hidden" role="dialog" aria-modal="true">
+<div id="modal-grup" class="fixed inset-0 z-60 hidden" role="dialog" aria-modal="true">
 
     <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-sm" onclick="closeGrupModal()"></div>
 
@@ -374,7 +374,7 @@
 </div>
 
 
-<div id="modal-detail-grup" class="fixed inset-0 z-[60] hidden" role="dialog" aria-modal="true">
+<div id="modal-detail-grup" class="fixed inset-0 z-60 hidden" role="dialog" aria-modal="true">
 
     <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-sm" onclick="closeDetailGrupModal()"></div>
 
