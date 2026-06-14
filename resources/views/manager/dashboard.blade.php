@@ -18,34 +18,31 @@
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
 
         
-        <a href="{{ route('staff-divisi.index') }}"
-           class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
             <div class="space-y-1">
                 <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Total Staff</span>
                 <h3 class="text-2xl font-bold text-gray-800">{{ $staffCount }}</h3>
                 <p class="text-[10px] text-gray-400">Pegawai di divisi Anda</p>
             </div>
-            <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-[#3B28CC] group-hover:bg-indigo-100 transition-colors">
+            <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-[#3B28CC]">
                 <i class="fa-solid fa-users text-xl"></i>
             </div>
-        </a>
+        </div>
 
         
-        <a href="{{ route('tugas.index', ['status' => 'Selesai']) }}"
-           class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
             <div class="space-y-1">
                 <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Tugas Selesai</span>
                 <h3 class="text-2xl font-bold text-green-600">{{ $tugasSelesai }}</h3>
                 <p class="text-[10px] text-gray-400">dari {{ $totalTugas }} total tugas</p>
             </div>
-            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-100 transition-colors">
+            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600">
                 <i class="fa-solid fa-circle-check text-xl"></i>
             </div>
-        </a>
+        </div>
 
         
-        <a href="{{ route('tugas.index') }}"
-           class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
             <div class="space-y-1">
                 <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Tugas Berjalan</span>
                 <h3 class="text-2xl font-bold text-amber-600">{{ $tugasBerjalan }}</h3>
@@ -53,10 +50,10 @@
                     <span class="text-blue-500 font-semibold">{{ $tugasPending }} menunggu review</span>
                 </p>
             </div>
-            <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 group-hover:bg-amber-100 transition-colors">
+            <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600">
                 <i class="fa-solid fa-clock text-xl"></i>
             </div>
-        </a>
+        </div>
 
         
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
@@ -75,8 +72,8 @@
     </div>
 
     
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
-        <a href="{{ route('grup-kerja.index') }}" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-3 hover:bg-gray-50/50 transition">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 shrink-0">
+        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-3">
             <div class="w-10 h-10 bg-violet-50 rounded-xl flex items-center justify-center text-violet-600 shrink-0">
                 <i class="fa-solid fa-people-group text-base"></i>
             </div>
@@ -84,29 +81,19 @@
                 <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Grup Kerja</p>
                 <p class="text-xl font-bold text-gray-800">{{ $totalGrup }}</p>
             </div>
-        </a>
-
-        <a href="{{ route('manager.laporan.index') }}" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-3 hover:bg-gray-50/50 transition">
-            <div class="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 shrink-0">
-                <i class="fa-solid fa-circle-exclamation text-base"></i>
-            </div>
-            <div>
-                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Laporan Masalah</p>
-                <p class="text-xl font-bold text-gray-800">{{ $totalLaporan }}</p>
-            </div>
-        </a>
+        </div>
 
         <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-3">
             <div class="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center text-teal-600 shrink-0">
                 <i class="fa-solid fa-diagram-project text-base"></i>
             </div>
             <div>
-                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Tugas Kelompok</p>
+                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Tugas Departemen</p>
                 <p class="text-xl font-bold text-gray-800">{{ $tugasKelompok }}</p>
             </div>
         </div>
 
-        <a href="{{ route('tugas.index', ['status' => 'Revisi']) }}" class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-3 hover:bg-gray-50/50 transition">
+        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-3">
             <div class="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 shrink-0">
                 <i class="fa-solid fa-arrow-rotate-left text-base"></i>
             </div>
@@ -114,90 +101,54 @@
                 <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Tugas Revisi</p>
                 <p class="text-xl font-bold text-gray-800">{{ $tugasRevisi }}</p>
             </div>
-        </a>
+        </div>
     </div>
 
     
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-                <div>
-                    <h2 class="text-sm font-bold text-gray-900">Laporan Masalah Terbaru</h2>
-                    <p class="text-xs text-gray-400 mt-0.5">Laporan kendala atau keluhan dari staff divisi Anda.</p>
-                </div>
-                <a href="{{ route('manager.laporan.index') }}" class="text-xs font-semibold text-[#3B28CC] hover:underline">Lihat semua →</a>
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div>
+                <h2 class="text-sm font-bold text-gray-900">Tugas Terbaru</h2>
+                <p class="text-xs text-gray-400 mt-0.5">5 tugas yang paling baru dibuat.</p>
             </div>
-            <div class="divide-y divide-gray-50">
-                @forelse($laporans as $laporan)
-                <div class="px-5 py-3.5 flex items-center gap-4 hover:bg-gray-50/60 transition-colors">
-                    <div class="w-9 h-9 bg-rose-50 rounded-xl flex items-center justify-center shrink-0 text-rose-600">
-                        <i class="fa-solid fa-triangle-exclamation text-sm"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold text-gray-800 truncate">{{ $laporan->judul }}</p>
-                        <p class="text-[10px] text-gray-400">Dari: {{ $laporan->user->nama_lengkap }} · {{ $laporan->created_at->diffForHumans() }}</p>
-                    </div>
-                    <div class="shrink-0 text-right">
-                        <span class="px-2 py-0.5 text-[9px] font-bold rounded-md
-                            {{ $laporan->status === 'Selesai' ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700' }}">
-                            {{ $laporan->status }}
-                        </span>
-                    </div>
-                </div>
-                @empty
-                <div class="px-5 py-8 text-center text-xs text-gray-400">Belum ada laporan masalah.</div>
-                @endforelse
-            </div>
+            <a href="{{ route('tugas.index') }}" class="text-xs font-semibold text-[#3B28CC] hover:underline">Lihat semua →</a>
         </div>
-
-        
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-                <div>
-                    <h2 class="text-sm font-bold text-gray-900">Tugas Terbaru</h2>
-                    <p class="text-xs text-gray-400 mt-0.5">5 tugas yang paling baru dibuat.</p>
+        <div class="divide-y divide-gray-50">
+            @forelse($tugas as $t)
+            @php
+                $statusConfig = match($t->status_tugas) {
+                    'Selesai'              => ['bg-green-50 text-green-600', 'fa-circle-check'],
+                    'Menunggu Persetujuan' => ['bg-blue-50 text-blue-600', 'fa-hourglass-half'],
+                    'Revisi'               => ['bg-rose-50 text-rose-600', 'fa-arrow-rotate-left'],
+                    default                => ['bg-gray-100 text-gray-500', 'fa-clock'],
+                };
+                $prioritasColor = match($t->prioritas) {
+                    'Tinggi' => 'bg-red-50 text-red-600',
+                    'Sedang' => 'bg-orange-50 text-orange-600',
+                    default  => 'bg-green-50 text-green-600',
+                };
+            @endphp
+            <div class="px-5 py-3.5 flex items-center gap-3 hover:bg-gray-50/60 transition-colors">
+                <div class="flex-1 min-w-0">
+                    <a href="{{ route('tugas.show', $t->id) }}" class="text-sm font-semibold text-gray-800 truncate hover:text-[#3B28CC] block">
+                        {{ $t->nama_tugas }}
+                    </a>
+                    <p class="text-[10px] text-gray-400 mt-0.5">
+                        Kategori: {{ $t->kategoritugas === 'Kelompok' ? 'Departemen' : $t->kategoritugas }}
+                        &nbsp;·&nbsp;Deadline: {{ \Carbon\Carbon::parse($t->deadline_tugas)->format('d M Y, H:i') }}
+                    </p>
                 </div>
-                <a href="{{ route('tugas.index') }}" class="text-xs font-semibold text-[#3B28CC] hover:underline">Lihat semua →</a>
-            </div>
-            <div class="divide-y divide-gray-50">
-                @forelse($tugas as $t)
-                @php
-                    $statusConfig = match($t->status_tugas) {
-                        'Selesai'              => ['bg-green-50 text-green-600', 'fa-circle-check'],
-                        'Menunggu Persetujuan' => ['bg-blue-50 text-blue-600', 'fa-hourglass-half'],
-                        'Revisi'               => ['bg-rose-50 text-rose-600', 'fa-arrow-rotate-left'],
-                        default                => ['bg-gray-100 text-gray-500', 'fa-clock'],
-                    };
-                    $prioritasColor = match($t->prioritas) {
-                        'Tinggi' => 'bg-red-50 text-red-600',
-                        'Sedang' => 'bg-orange-50 text-orange-600',
-                        default  => 'bg-green-50 text-green-600',
-                    };
-                @endphp
-                <div class="px-5 py-3.5 flex items-center gap-3 hover:bg-gray-50/60 transition-colors">
-                    <div class="flex-1 min-w-0">
-                        <a href="{{ route('tugas.show', $t->id) }}" class="text-sm font-semibold text-gray-800 truncate hover:text-[#3B28CC] block">
-                            {{ $t->nama_tugas }}
-                        </a>
-                        <p class="text-[10px] text-gray-400 mt-0.5">
-                            Kategori: {{ $t->kategoritugas }}
-                            &nbsp;·&nbsp;Deadline: {{ \Carbon\Carbon::parse($t->deadline_tugas)->format('d M Y, H:i') }}
-                        </p>
-                    </div>
-                    <div class="flex items-center gap-1.5 shrink-0">
-                        <span class="px-2 py-0.5 text-[9px] font-bold rounded-md {{ $prioritasColor }}">{{ $t->prioritas }}</span>
-                        <span class="inline-flex items-center gap-1 px-2 py-0.5 text-[9px] font-bold rounded-md {{ $statusConfig[0] }}">
-                            <i class="fa-solid {{ $statusConfig[1] }} text-[8px]"></i>
-                            {{ $t->status_tugas ?? 'Belum Dikerjakan' }}
-                        </span>
-                    </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <span class="px-2 py-0.5 text-[9px] font-bold rounded-md {{ $prioritasColor }}">{{ $t->prioritas }}</span>
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 text-[9px] font-bold rounded-md {{ $statusConfig[0] }}">
+                        <i class="fa-solid {{ $statusConfig[1] }} text-[8px]"></i>
+                        {{ $t->status_tugas ?? 'Belum Dikerjakan' }}
+                    </span>
                 </div>
-                @empty
-                <div class="px-5 py-8 text-center text-xs text-gray-400">Belum ada tugas.</div>
-                @endforelse
             </div>
+            @empty
+            <div class="px-5 py-8 text-center text-xs text-gray-400">Belum ada tugas.</div>
+            @endforelse
         </div>
     </div>
 

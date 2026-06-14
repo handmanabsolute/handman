@@ -101,7 +101,7 @@
                 <i class="fa-solid fa-diagram-project text-base"></i>
             </div>
             <div>
-                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Tugas Kelompok</p>
+                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Tugas Departemen</p>
                 <p class="text-xl font-bold text-gray-800">{{ $tugasKelompokSaya }}</p>
             </div>
         </div>
@@ -182,7 +182,7 @@
                             {{ $t->nama_tugas }}
                         </a>
                         <p class="text-[10px] text-gray-400 mt-0.5">
-                            Kategori: {{ $t->kategoritugas }}
+                            Kategori: {{ $t->kategoritugas === 'Kelompok' ? 'Departemen' : $t->kategoritugas }}
                             &nbsp;·&nbsp;Deadline: {{ \Carbon\Carbon::parse($t->deadline_tugas)->format('d M Y, H:i') }}
                         </p>
                     </div>

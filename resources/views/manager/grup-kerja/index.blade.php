@@ -101,16 +101,19 @@
                            class="flex-1 flex items-center justify-center gap-1.5 py-2 border border-gray-200 text-gray-700 text-xs font-semibold rounded-xl hover:bg-gray-50 transition-colors">
                             <i class="fa-solid fa-eye text-xs"></i> Lihat Detail
                         </a>
-                        <form action="{{ route('grup-kerja.destroy', $grup->id) }}" method="POST"
-                              onsubmit="return confirm('Bubarkan grup \"{{ addslashes($grup->nama_grup) }}\"? Tindakan ini tidak dapat dibatalkan.')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                    class="flex items-center justify-center w-9 h-9 border border-rose-100 text-rose-500 rounded-xl hover:bg-rose-50 transition-colors cursor-pointer"
-                                    title="Bubarkan Grup">
-                                <i class="fa-solid fa-trash-can text-xs"></i>
-                            </button>
-                        </form>
+                        <button type="button" onclick="openModal('dissolve-grup-{{ $grup->id }}')"
+                                class="flex items-center justify-center w-9 h-9 border border-rose-100 text-rose-500 rounded-xl hover:bg-rose-50 transition-colors cursor-pointer"
+                                title="Bubarkan Grup">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                        <x-confirm-modal 
+                            id="dissolve-grup-{{ $grup->id }}" 
+                            title="Bubarkan Grup" 
+                            message="Apakah Anda yakin ingin membubarkan grup '{{ addslashes($grup->nama_grup) }}'? Tindakan ini tidak dapat dibatalkan." 
+                            action="{{ route('grup-kerja.destroy', $grup->id) }}" 
+                            method="DELETE" 
+                            type="danger" 
+                        />
                     </div>
                 </div>
             </div>

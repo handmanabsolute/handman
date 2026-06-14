@@ -16,15 +16,18 @@
                class="inline-flex items-center gap-2 px-4 py-2 border border-gray-200 text-gray-600 text-sm font-semibold rounded-xl hover:bg-gray-50 transition-colors">
                 <i class="fa-solid fa-arrow-left text-xs"></i> Kembali
             </a>
-            <form action="{{ route('grup-kerja.destroy', $grup->id) }}" method="POST"
-                  onsubmit="return confirm('Bubarkan grup \"{{ addslashes($grup->nama_grup) }}\"?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit"
-                        class="inline-flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 border border-rose-100 text-sm font-semibold rounded-xl hover:bg-rose-100 transition-colors cursor-pointer">
-                    <i class="fa-solid fa-trash-can text-xs"></i> Bubarkan Grup
-                </button>
-            </form>
+            <button type="button" onclick="openModal('dissolve-grup-{{ $grup->id }}')"
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 border border-rose-100 text-sm font-semibold rounded-xl hover:bg-rose-100 transition-colors cursor-pointer">
+                <i class="fa-solid fa-trash-can text-xs"></i> Bubarkan Grup
+            </button>
+            <x-confirm-modal 
+                id="dissolve-grup-{{ $grup->id }}" 
+                title="Bubarkan Grup" 
+                message="Apakah Anda yakin ingin membubarkan grup '{{ addslashes($grup->nama_grup) }}'?" 
+                action="{{ route('grup-kerja.destroy', $grup->id) }}" 
+                method="DELETE" 
+                type="danger" 
+            />
         </div>
     </div>
 

@@ -11,6 +11,11 @@
             <h1 class="text-2xl font-bold text-gray-900">Monitor Tugas</h1>
             <p class="text-sm text-gray-500 mt-0.5">Pantau seluruh tugas di semua departemen secara real-time.</p>
         </div>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('admin.tugas.exportPdf', request()->query()) }}" target="_blank" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-file-pdf"></i> Ekspor PDF
+            </a>
+        </div>
     </div>
 
     
@@ -59,26 +64,9 @@
     
     <form method="GET" action="{{ route('admin.tugas.index') }}" id="filter-form">
         <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
-            <div class="flex flex-wrap gap-3 items-end">
+            <div class="flex flex-col sm:flex-row gap-3 items-end">
 
-                
-                <div class="flex-1 min-w-[180px]">
-                    <label class="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Cari Tugas</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-                        <input
-                            type="text"
-                            name="search"
-                            id="filter-search"
-                            value="{{ request('search') }}"
-                            placeholder="Nama tugas..."
-                            class="w-full pl-8 pr-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all"
-                        >
-                    </div>
-                </div>
-
-                
-                <div class="min-w-[160px]">
+                <div class="w-full sm:flex-1">
                     <label class="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Departemen</label>
                     <select name="departemen_id" id="filter-departemen" class="w-full py-2 px-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all appearance-none cursor-pointer">
                         <option value="">Semua Departemen</option>
@@ -90,72 +78,17 @@
                     </select>
                 </div>
 
-                
-                <div class="min-w-[160px]">
-                    <label class="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Status</label>
-                    <select name="status" id="filter-status" class="w-full py-2 px-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all appearance-none cursor-pointer">
-                        <option value="">Semua Status</option>
-                        <option value="Belum Dikerjakan" {{ request('status') === 'Belum Dikerjakan' ? 'selected' : '' }}>Belum Dikerjakan</option>
-                        <option value="Menunggu Persetujuan" {{ request('status') === 'Menunggu Persetujuan' ? 'selected' : '' }}>Menunggu Persetujuan</option>
-                        <option value="Revisi" {{ request('status') === 'Revisi' ? 'selected' : '' }}>Revisi</option>
-                        <option value="Selesai" {{ request('status') === 'Selesai' ? 'selected' : '' }}>Selesai</option>
-                    </select>
-                </div>
-
-                
-                <div class="min-w-[140px]">
-                    <label class="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Prioritas</label>
-                    <select name="prioritas" id="filter-prioritas" class="w-full py-2 px-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all appearance-none cursor-pointer">
-                        <option value="">Semua Prioritas</option>
-                        <option value="Tinggi" {{ request('prioritas') === 'Tinggi' ? 'selected' : '' }}>Tinggi</option>
-                        <option value="Sedang" {{ request('prioritas') === 'Sedang' ? 'selected' : '' }}>Sedang</option>
-                        <option value="Rendah" {{ request('prioritas') === 'Rendah' ? 'selected' : '' }}>Rendah</option>
-                    </select>
-                </div>
-
-                
-                <div class="min-w-[140px]">
-                    <label class="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Kategori</label>
-                    <select name="kategori" id="filter-kategori" class="w-full py-2 px-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all appearance-none cursor-pointer">
-                        <option value="">Semua Kategori</option>
-                        <option value="Individu" {{ request('kategori') === 'Individu' ? 'selected' : '' }}>Individu</option>
-                        <option value="Kelompok" {{ request('kategori') === 'Kelompok' ? 'selected' : '' }}>Kelompok</option>
-                    </select>
-                </div>
-
-                
-                <div class="flex items-end gap-2">
-                    <button type="submit" class="px-4 py-2 bg-[#3B28CC] text-white text-sm font-semibold rounded-xl hover:bg-[#2c1fa3] transition-colors flex items-center gap-2 cursor-pointer">
+                <div class="flex gap-2 w-full sm:w-auto shrink-0 justify-end">
+                    <button type="submit" class="px-4 py-2 bg-[#3B28CC] text-white text-sm font-semibold rounded-xl hover:bg-[#2c1fa3] transition-colors flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center">
                         <i class="fa-solid fa-filter text-xs"></i> Filter
                     </button>
-                    @if(request()->hasAny(['search', 'departemen_id', 'status', 'prioritas', 'kategori']))
-                        <a href="{{ route('admin.tugas.index') }}" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm font-semibold rounded-xl hover:bg-gray-50 transition-colors flex items-center gap-2">
+                    @if(request()->filled('departemen_id'))
+                        <a href="{{ route('admin.tugas.index') }}" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm font-semibold rounded-xl hover:bg-gray-50 transition-colors flex items-center gap-2 w-full sm:w-auto justify-center">
                             <i class="fa-solid fa-xmark text-xs"></i> Reset
                         </a>
                     @endif
                 </div>
             </div>
-
-            
-            @php
-                $activeFilters = array_filter([
-                    'departemen_id' => request('departemen_id') ? $departemens->firstWhere('id', request('departemen_id'))?->nama_departemen : null,
-                    'status'        => request('status'),
-                    'prioritas'     => request('prioritas'),
-                    'kategori'      => request('kategori'),
-                    'search'        => request('search') ? '"'.request('search').'"' : null,
-                ]);
-            @endphp
-            @if(count($activeFilters) > 0)
-                <div class="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-100">
-                    <span class="text-xs text-gray-400 font-medium self-center">Filter aktif:</span>
-                    @foreach($activeFilters as $key => $label)
-                        <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-[#3B28CC] text-xs font-semibold rounded-lg border border-indigo-100">
-                            <i class="fa-solid fa-tag text-[9px]"></i> {{ $label }}
-                        </span>
-                    @endforeach
-                </div>
-            @endif
         </div>
     </form>
 
@@ -188,7 +121,7 @@
                         </td>
                         <td class="p-4">
                             <span class="px-2.5 py-1 text-xs font-semibold rounded-lg {{ $t->kategoritugas === 'Kelompok' ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600' }}">
-                                {{ $t->kategoritugas }}
+                                {{ $t->kategoritugas === 'Kelompok' ? 'Departemen' : $t->kategoritugas }}
                             </span>
                         </td>
                         <td class="p-4">

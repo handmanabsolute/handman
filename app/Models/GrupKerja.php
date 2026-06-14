@@ -36,6 +36,7 @@ class GrupKerja extends Model
     public function anggota(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'detail_grups', 'grup_kerja_id', 'user_id')
+                    ->using(DetailGrup::class)
                     ->withTimestamps();
     }
 }

@@ -73,6 +73,16 @@ class c_kelolaJadwal extends Controller
             'tugas_id' => 'nullable|exists:tugas,id',
         ]);
 
+        if ($request->hasHeader('X-Validate-Only')) {
+            if ($validator->fails()) {
+                return response()->json([
+                    'valid' => false,
+                    'errors' => $validator->errors()
+                ], 200);
+            }
+            return response()->json(['valid' => true], 200);
+        }
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -107,6 +117,16 @@ class c_kelolaJadwal extends Controller
             'catatan' => 'required|string',
             'tugas_id' => 'nullable|exists:tugas,id',
         ]);
+
+        if ($request->hasHeader('X-Validate-Only')) {
+            if ($validator->fails()) {
+                return response()->json([
+                    'valid' => false,
+                    'errors' => $validator->errors()
+                ], 200);
+            }
+            return response()->json(['valid' => true], 200);
+        }
 
         if ($validator->fails()) {
             return response()->json([

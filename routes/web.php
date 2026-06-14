@@ -62,6 +62,11 @@ Route::middleware('auth')->group(function () {
     // Notifications (Shared between Admin, Manager, & Staff)
     Route::get('/notifications/{id}/read', [\App\Http\Controllers\c_notification::class, 'read'])->name('notifications.read');
     Route::post('/notifications/read-all', [\App\Http\Controllers\c_notification::class, 'readAll'])->name('notifications.readAll');
+    Route::delete('/notifications/{id}', [\App\Http\Controllers\c_notification::class, 'destroy'])->name('notifications.destroy');
+    
+    // Detail & Update Laporan (Shared)
+    Route::get('/laporan/{id}', [c_laporan::class, 'show'])->name('laporan.show');
+    Route::put('/laporan/{id}', [c_laporan::class, 'update'])->name('laporan.update');
 
     // Kelola Jadwal Notes (Shared between Manager & Staff)
     Route::post('/jadwal/notes', [\App\Http\Controllers\c_kelolaJadwal::class, 'storeNote'])->name('jadwal.notes.store');
@@ -72,6 +77,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/dashboard', [c_adminDashboard::class, 'index'])->name('admin.dashboard');
         Route::resource('kelola-akun', c_kelolaAkun::class);
         Route::resource('departemen', c_departemen::class);
+        Route::get('/admin/tugas/export-pdf', [c_adminTugas::class, 'exportPdf'])->name('admin.tugas.exportPdf');
         Route::get('/admin/tugas', [c_adminTugas::class, 'index'])->name('admin.tugas.index');
         
         // Rute Laporan Admin
@@ -113,6 +119,7 @@ Route::middleware('auth')->group(function () {
                 'tugasKelompok', 'laporans'
             ));
         })->name('manager.dashboard');
+        Route::get('/tugas/export-pdf', [c_kelolaTugas::class, 'exportPdf'])->name('tugas.exportPdf');
         Route::resource('tugas', c_kelolaTugas::class);
         Route::put('/tugas/{id}/review', [c_kelolaTugas::class, 'reviewTugas'])->name('tugas.review');
 

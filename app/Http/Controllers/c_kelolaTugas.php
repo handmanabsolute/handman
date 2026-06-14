@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class c_kelolaTugas extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $departemenId = auth()->user()->departemen_id;
 
@@ -22,21 +22,31 @@ class c_kelolaTugas extends Controller
                 $q->where('users.id', $userId);
             })->pluck('id');
 
-            $tugas = Tugas::where('departemen_id', $departemenId)
+            $query = Tugas::where('departemen_id', $departemenId)
                 ->where(function ($query) use ($userId, $myGrupIds) {
                     $query->whereHas('detailTugas', function ($q) use ($userId, $myGrupIds) {
                         $q->where('user_id', $userId)
                             ->orWhereIn('grup_kerja_id', $myGrupIds);
                     })
                         ->orWhereDoesntHave('detailTugas');
-                })
-                ->latest()
-                ->get();
+                });
+
+            if ($request->filled('search')) {
+                $query->where('nama_tugas', 'like', '%' . $request->search . '%');
+            }
+
+            $tugas = $query->latest()->get();
 
             return view('staff.tugas.index', compact('tugas'));
         }
 
-        $tugas = Tugas::where('departemen_id', $departemenId)->latest()->get();
+        $query = Tugas::where('departemen_id', $departemenId);
+
+        if ($request->filled('search')) {
+            $query->where('nama_tugas', 'like', '%' . $request->search . '%');
+        }
+
+        $tugas = $query->latest()->get();
 
         return view('manager.tugas.index', compact('tugas'));
     }
@@ -69,7 +79,7 @@ class c_kelolaTugas extends Controller
                 : null,
         ]);
 
-        $request->validate([
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'nama_tugas' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'tanggal_tugas' => 'required|date',
@@ -85,6 +95,27 @@ class c_kelolaTugas extends Controller
             'user_id.required_if' => 'Staff penanggung jawab wajib dipilih jika kategori tugas adalah Individu.',
             'grup_kerja_id.required_if' => 'Grup kerja penanggung jawab wajib dipilih jika kategori tugas adalah Kelompok.',
         ]);
+
+        if ($request->hasHeader('X-Validate-Only')) {
+            if ($validator->fails()) {
+                $errors = $validator->errors();
+                if ($errors->has('tanggal_tugas')) {
+                    $errors->add('tanggal_tugas_date', $errors->first('tanggal_tugas'));
+                    $errors->add('tanggal_tugas_time', $errors->first('tanggal_tugas'));
+                }
+                if ($errors->has('deadline_tugas')) {
+                    $errors->add('deadline_tugas_date', $errors->first('deadline_tugas'));
+                    $errors->add('deadline_tugas_time', $errors->first('deadline_tugas'));
+                }
+                return response()->json([
+                    'valid' => false,
+                    'errors' => $errors
+                ], 200);
+            }
+            return response()->json(['valid' => true], 200);
+        }
+
+        $validator->validate();
 
         $dataTugas = $request->only([
             'nama_tugas', 'deskripsi', 'tanggal_tugas', 'deadline_tugas', 'prioritas', 'kategoritugas',
@@ -186,7 +217,16 @@ class c_kelolaTugas extends Controller
         $departemenId = auth()->user()->departemen_id;
         $tugas = Tugas::where('departemen_id', $departemenId)->findOrFail($id);
 
-        $request->validate([
+        $request->merge([
+            'tanggal_tugas' => $request->filled(['tanggal_tugas_date', 'tanggal_tugas_time'])
+                ? $request->tanggal_tugas_date.' '.$request->tanggal_tugas_time
+                : null,
+            'deadline_tugas' => $request->filled(['deadline_tugas_date', 'deadline_tugas_time'])
+                ? $request->deadline_tugas_date.' '.$request->deadline_tugas_time
+                : null,
+        ]);
+
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'nama_tugas' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'tanggal_tugas' => 'required|date',
@@ -201,6 +241,27 @@ class c_kelolaTugas extends Controller
             'user_id.required_if' => 'Staff penanggung jawab wajib dipilih jika kategori tugas adalah Individu.',
             'grup_kerja_id.required_if' => 'Grup kerja penanggung jawab wajib dipilih jika kategori tugas adalah Kelompok.',
         ]);
+
+        if ($request->hasHeader('X-Validate-Only')) {
+            if ($validator->fails()) {
+                $errors = $validator->errors();
+                if ($errors->has('tanggal_tugas')) {
+                    $errors->add('tanggal_tugas_date', $errors->first('tanggal_tugas'));
+                    $errors->add('tanggal_tugas_time', $errors->first('tanggal_tugas'));
+                }
+                if ($errors->has('deadline_tugas')) {
+                    $errors->add('deadline_tugas_date', $errors->first('deadline_tugas'));
+                    $errors->add('deadline_tugas_time', $errors->first('deadline_tugas'));
+                }
+                return response()->json([
+                    'valid' => false,
+                    'errors' => $errors
+                ], 200);
+            }
+            return response()->json(['valid' => true], 200);
+        }
+
+        $validator->validate();
 
         $tugas->update($request->only([
             'nama_tugas', 'deskripsi', 'tanggal_tugas', 'deadline_tugas', 'prioritas', 'status_tugas', 'kategoritugas', 'catatan_revisi',
@@ -234,10 +295,22 @@ class c_kelolaTugas extends Controller
         $departemenId = auth()->user()->departemen_id;
         $tugas = Tugas::where('departemen_id', $departemenId)->findOrFail($id);
 
-        $request->validate([
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'action' => 'required|in:setujui,revisi',
             'catatan_revisi' => 'required_if:action,revisi|nullable|string',
         ]);
+
+        if ($request->hasHeader('X-Validate-Only')) {
+            if ($validator->fails()) {
+                return response()->json([
+                    'valid' => false,
+                    'errors' => $validator->errors()
+                ], 200);
+            }
+            return response()->json(['valid' => true], 200);
+        }
+
+        $validator->validate();
 
         if ($request->action === 'setujui') {
             $tugas->update([
@@ -354,11 +427,23 @@ class c_kelolaTugas extends Controller
         $departemenId = auth()->user()->departemen_id;
         $tugas = Tugas::where('departemen_id', $departemenId)->findOrFail($id);
 
-        $request->validate([
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'gambar_file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
             'nama_file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:20480',
             'link_tugas' => 'nullable|url',
         ]);
+
+        if ($request->hasHeader('X-Validate-Only')) {
+            if ($validator->fails()) {
+                return response()->json([
+                    'valid' => false,
+                    'errors' => $validator->errors()
+                ], 200);
+            }
+            return response()->json(['valid' => true], 200);
+        }
+
+        $validator->validate();
 
         $hasGambar = $request->hasFile('gambar_file');
         $hasDokumen = $request->hasFile('nama_file');
@@ -401,5 +486,90 @@ class c_kelolaTugas extends Controller
         }
 
         return redirect()->route('staff.tugas.show', $tugas->id)->with('success', 'Tugas berhasil dikumpulkan.');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $departemenId = auth()->user()->departemen_id;
+        $departemenName = auth()->user()->departemen ? auth()->user()->departemen->nama_departemen : 'Departemen Anda';
+
+        $query = Tugas::where('departemen_id', $departemenId)->with('departemen')->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status_tugas', $request->status);
+        }
+
+        if ($request->filled('prioritas')) {
+            $query->where('prioritas', $request->prioritas);
+        }
+
+        if ($request->filled('kategori')) {
+            $query->where('kategoritugas', $request->kategori);
+        }
+
+        if ($request->filled('search')) {
+            $query->where('nama_tugas', 'like', '%' . $request->search . '%');
+        }
+
+        $tugasList = $query->get();
+
+        $totalTugas      = $tugasList->count();
+        $tugasSelesai    = $tugasList->where('status_tugas', 'Selesai')->count();
+        $tugasBerjalan   = $tugasList->whereIn('status_tugas', ['Belum Dikerjakan', 'Revisi'])->count();
+        $tugasMenunggu   = $tugasList->where('status_tugas', 'Menunggu Persetujuan')->count();
+
+        $currentEfficiency = $totalTugas > 0 ? round(($tugasSelesai / $totalTugas) * 100) : 0;
+        
+        $cutoffDate = now()->subDays(14);
+        $pastTugas = $tugasList->filter(function($t) use ($cutoffDate) {
+            return \Carbon\Carbon::parse($t->tanggal_tugas)->lt($cutoffDate);
+        });
+        $recentTugas = $tugasList->filter(function($t) use ($cutoffDate) {
+            return \Carbon\Carbon::parse($t->tanggal_tugas)->gte($cutoffDate);
+        });
+
+        $pastTotal = $pastTugas->count();
+        $pastSelesai = $pastTugas->where('status_tugas', 'Selesai')->count();
+        $pastEfficiency = $pastTotal > 0 ? round(($pastSelesai / $pastTotal) * 100) : null;
+
+        $recentTotal = $recentTugas->count();
+        $recentSelesai = $recentTugas->where('status_tugas', 'Selesai')->count();
+        $recentEfficiency = $recentTotal > 0 ? round(($recentSelesai / $recentTotal) * 100) : null;
+
+        if ($pastEfficiency !== null && $recentEfficiency !== null) {
+            $change = $recentEfficiency - $pastEfficiency;
+        } elseif ($recentEfficiency !== null) {
+            $change = $recentEfficiency - 75;
+        } else {
+            $change = 0;
+        }
+
+        $filters = [];
+        if ($request->filled('status')) {
+            $filters[] = 'Status: ' . $request->status;
+        }
+        if ($request->filled('prioritas')) {
+            $filters[] = 'Prioritas: ' . $request->prioritas;
+        }
+        if ($request->filled('kategori')) {
+            $filters[] = 'Kategori: ' . $request->kategori;
+        }
+        if ($request->filled('search')) {
+            $filters[] = 'Pencarian: "' . $request->search . '"';
+        }
+        $kategoriFilter = count($filters) > 0 ? implode(', ', $filters) : 'Semua';
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('exports.tugas-pdf', compact(
+            'tugasList',
+            'departemenName',
+            'kategoriFilter',
+            'totalTugas',
+            'tugasSelesai',
+            'tugasBerjalan',
+            'tugasMenunggu',
+            'currentEfficiency',
+            'change'
+        ));
+        return $pdf->download('Laporan_Kelola_Tugas_' . now()->format('YmdHis') . '.pdf');
     }
 }

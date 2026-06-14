@@ -99,9 +99,21 @@ class c_staffDivisi extends Controller
             ->where('nama_role', 'staff')
             ->findOrFail($id);
 
-        $request->validate([
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'grup_kerja_id' => 'required|exists:grup_kerjas,id',
         ]);
+
+        if ($request->hasHeader('X-Validate-Only')) {
+            if ($validator->fails()) {
+                return response()->json([
+                    'valid' => false,
+                    'errors' => $validator->errors()
+                ], 200);
+            }
+            return response()->json(['valid' => true], 200);
+        }
+
+        $validator->validate();
 
         $grup = \App\Models\GrupKerja::where('departemen_id', $departemenId)->findOrFail($request->grup_kerja_id);
 
@@ -123,9 +135,21 @@ class c_staffDivisi extends Controller
             ->where('nama_role', 'staff')
             ->findOrFail($id);
 
-        $request->validate([
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'grup_kerja_id' => 'required|exists:grup_kerjas,id',
         ]);
+
+        if ($request->hasHeader('X-Validate-Only')) {
+            if ($validator->fails()) {
+                return response()->json([
+                    'valid' => false,
+                    'errors' => $validator->errors()
+                ], 200);
+            }
+            return response()->json(['valid' => true], 200);
+        }
+
+        $validator->validate();
 
         $grup = \App\Models\GrupKerja::where('departemen_id', $departemenId)->findOrFail($request->grup_kerja_id);
 

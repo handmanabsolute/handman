@@ -16,20 +16,21 @@
         <div class="space-y-1.5">
             <label class="text-sm font-semibold text-gray-700">Nama Tugas</label>
             <input type="text" name="nama_tugas" value="{{ old('nama_tugas', $tugas->nama_tugas) }}" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC]" required>
-            @error('nama_tugas') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+            <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-nama_tugas"></p>
         </div>
 
         <div class="space-y-1.5">
             <label class="text-sm font-semibold text-gray-700">Deskripsi Tugas</label>
             <textarea name="deskripsi" rows="5" placeholder="Detail Tugas....." class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC]" required>{{ old('deskripsi', $tugas->deskripsi) }}</textarea>
-            @error('deskripsi') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+            <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-deskripsi"></p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="space-y-1.5">
                 <label class="text-sm font-semibold text-gray-700">Tanggal Mulai</label>
                 <input type="date" name="tanggal_tugas_date" value="{{ old('tanggal_tugas_date', \Carbon\Carbon::parse($tugas->tanggal_tugas)->format('Y-m-d')) }}" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC]" required>
-                @error('tanggal_tugas') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-tanggal_tugas_date"></p>
+                <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-tanggal_tugas"></p>
             </div>
 
             <div class="space-y-1.5">
@@ -40,7 +41,8 @@
             <div class="space-y-1.5">
                 <label class="text-sm font-semibold text-gray-700">Tanggal Deadline</label>
                 <input type="date" name="deadline_tugas_date" value="{{ old('deadline_tugas_date', \Carbon\Carbon::parse($tugas->deadline_tugas)->format('Y-m-d')) }}" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC]" required>
-                @error('deadline_tugas') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-deadline_tugas_date"></p>
+                <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-deadline_tugas"></p>
             </div>
 
             <div class="space-y-1.5">
@@ -57,16 +59,16 @@
                     <option value="Sedang" {{ old('prioritas', $tugas->prioritas) == 'Sedang' ? 'selected' : '' }}>Sedang</option>
                     <option value="Tinggi" {{ old('prioritas', $tugas->prioritas) == 'Tinggi' ? 'selected' : '' }}>Tinggi</option>
                 </select>
-                @error('prioritas') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-prioritas"></p>
             </div>
 
             <div class="space-y-1.5">
                 <label class="text-sm font-semibold text-gray-700">Kategori Tugas</label>
                 <select name="kategoritugas" id="kategoritugas" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC]" required>
                     <option value="Individu" {{ old('kategoritugas', $tugas->kategoritugas) == 'Individu' ? 'selected' : '' }}>Individu</option>
-                    <option value="Kelompok" {{ old('kategoritugas', $tugas->kategoritugas) == 'Kelompok' ? 'selected' : '' }}>Kelompok</option>
+                    <option value="Kelompok" {{ old('kategoritugas', $tugas->kategoritugas) == 'Kelompok' ? 'selected' : '' }}>Departemen</option>
                 </select>
-                @error('kategoritugas') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-kategoritugas"></p>
             </div>
 
             <div class="space-y-1.5">
@@ -75,7 +77,7 @@
                     <option value="Belum Selesai" {{ old('status_tugas', $tugas->status_tugas) == 'Belum Selesai' ? 'selected' : '' }}>Belum Selesai</option>
                     <option value="Selesai" {{ old('status_tugas', $tugas->status_tugas) == 'Selesai' ? 'selected' : '' }}>Selesai</option>
                 </select>
-                @error('status_tugas') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-status_tugas"></p>
             </div>
         </div>
 
@@ -89,7 +91,7 @@
                         <option value="{{ $staff->id }}" {{ old('user_id', $tugas->detailTugas->user_id ?? '') == $staff->id ? 'selected' : '' }}>{{ $staff->nama_lengkap }}</option>
                     @endforeach
                 </select>
-                @error('user_id') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-user_id"></p>
             </div>
 
             
@@ -101,14 +103,14 @@
                         <option value="{{ $grup->id }}" {{ old('grup_kerja_id', $tugas->detailTugas->grup_kerja_id ?? '') == $grup->id ? 'selected' : '' }}>{{ $grup->nama_grup }} ({{ $grup->anggota->count() }} Anggota)</option>
                     @endforeach
                 </select>
-                @error('grup_kerja_id') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-grup_kerja_id"></p>
             </div>
         </div>
 
         <div class="space-y-1.5">
             <label class="text-sm font-semibold text-gray-700">Catatan Revisi <span class="text-xs font-normal text-gray-400">(Opsional)</span></label>
             <textarea name="catatan_revisi" rows="3" placeholder="Tambahkan catatan jika ada perbaikan yang perlu dilakukan....." class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC]">{{ old('catatan_revisi', $tugas->catatan_revisi) }}</textarea>
-            @error('catatan_revisi') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+            <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-catatan_revisi"></p>
         </div>
 
         <div class="space-y-3 pt-2">
@@ -177,8 +179,8 @@
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 <span id="teks_error_kapasitas">Ukuran file melebihi kapasitas maksimum! File tidak dapat diupload.</span>
             </div>
-            @error('gambar_file') <p class="text-xs text-red-500">{{ $message }}</p> @enderror
-            @error('nama_file') <p class="text-xs text-red-500">{{ $message }}</p> @enderror
+            <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-gambar_file"></p>
+            <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-nama_file"></p>
         </div>
 
         <div class="space-y-1.5">
@@ -186,7 +188,7 @@
                 <i class="fa-solid fa-link text-[#3B28CC]"></i> Link Tugas
             </label>
             <input type="url" name="link_tugas" value="{{ old('link_tugas', $lampiran->link_tugas ?? '') }}" placeholder="Link Tugas" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC]">
-            @error('link_tugas') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+            <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-link_tugas"></p>
         </div>
 
         <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-100">
@@ -343,5 +345,9 @@
         kategoritugasSelect.addEventListener('change', toggleAssigneeFields);
         toggleAssigneeFields();
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initRealTimeValidation('form_tugas');
+    });
 </script>
 @endsection

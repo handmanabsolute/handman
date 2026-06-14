@@ -41,11 +41,12 @@ class c_profil extends Controller
         }
 
         if ($user->nama_role === 'admin') {
-            $rules['password'] = ['nullable', 'string', Password::min(8)->letters()->mixedCase()->symbols()];
+            $rules['password'] = ['nullable', 'string', 'confirmed', Password::min(8)->letters()->mixedCase()->symbols()];
             $messages['password.string'] = 'Password harus berupa teks.';
             $messages['password.min'] = 'Password minimal harus terdiri dari 8 karakter.';
             $messages['password.mixed'] = 'Password harus mengandung kombinasi huruf besar dan huruf kecil.';
             $messages['password.symbols'] = 'Password harus mengandung simbol unik seperti !, @, #, dsb.';
+            $messages['password.confirmed'] = 'Konfirmasi password baru tidak cocok.';
         } else {
 
             $rules = array_merge($rules, [
@@ -54,7 +55,7 @@ class c_profil extends Controller
                 'tanggal_lahir' => 'required|date',
                 'alamat' => 'required|string',
                 'deskripsi_user' => 'nullable|string',
-                'password' => ['nullable', 'string', Password::min(8)->letters()->mixedCase()->symbols()],
+                'password' => ['nullable', 'string', 'confirmed', Password::min(8)->letters()->mixedCase()->symbols()],
             ]);
 
             $messages = array_merge($messages, [
@@ -70,6 +71,7 @@ class c_profil extends Controller
                 'password.min' => 'Password minimal harus terdiri dari 8 karakter.',
                 'password.mixed' => 'Password harus mengandung kombinasi huruf besar dan huruf kecil.',
                 'password.symbols' => 'Password harus mengandung simbol unik seperti !, @, #, dsb.',
+                'password.confirmed' => 'Konfirmasi password baru tidak cocok.',
             ]);
         }
 

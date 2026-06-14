@@ -9,9 +9,14 @@
             <h1 class="text-2xl font-bold text-gray-900">Kelola Tugas</h1>
             <p class="text-sm text-gray-500">Manajemen daftar tugas, kategori, dan batas waktu pengerjaan.</p>
         </div>
-        <a href="{{ route('tugas.create') }}" class="bg-[#3B28CC] text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#2c1fa3] transition-colors flex items-center justify-center gap-2">
-            <i class="fa-solid fa-plus"></i> Tambah Tugas
-        </a>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('tugas.exportPdf') }}" target="_blank" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm">
+                <i class="fa-solid fa-file-pdf"></i> Ekspor PDF
+            </a>
+            <a href="{{ route('tugas.create') }}" class="bg-[#3B28CC] text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#2c1fa3] transition-colors flex items-center justify-center gap-2">
+                <i class="fa-solid fa-plus"></i> Tambah Tugas
+            </a>
+        </div>
     </div>
 
     @if(session('success'))
@@ -41,7 +46,7 @@
                         <td class="p-4">{{ $t->departemen->nama_departemen ?? '-' }}</td>
                         <td class="p-4">
                             <span class="px-2.5 py-1 text-xs font-semibold rounded-lg {{ $t->kategoritugas === 'Kelompok' ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600' }}">
-                                {{ $t->kategoritugas }}
+                                {{ $t->kategoritugas === 'Kelompok' ? 'Departemen' : $t->kategoritugas }}
                             </span>
                         </td>
                         <td class="p-4">
@@ -63,13 +68,17 @@
                                 <a href="{{ route('tugas.edit', $t->id) }}" class="p-2 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-all" title="Edit">
                                     <i class="fa-solid fa-pen-to-square text-base"></i>
                                 </a>
-                                <form action="{{ route('tugas.destroy', $t->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus tugas ini?')" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all disabled:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed" title="Hapus">
-                                        <i class="fa-solid fa-trash-can text-base"></i>
-                                    </button>
-                                </form>
+                                <button type="button" onclick="openModal('delete-tugas-{{ $t->id }}')" class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all disabled:bg-gray-100 disabled:text-gray-300 disabled:cursor-not-allowed" title="Hapus">
+                                    <i class="fa-solid fa-trash-can text-base"></i>
+                                </button>
+                                <x-confirm-modal 
+                                    id="delete-tugas-{{ $t->id }}" 
+                                    title="Hapus Tugas" 
+                                    message="Apakah Anda yakin ingin menghapus tugas '{{ addslashes($t->nama_tugas) }}'? Tindakan ini tidak dapat dibatalkan." 
+                                    action="{{ route('tugas.destroy', $t->id) }}" 
+                                    method="DELETE" 
+                                    type="danger" 
+                                />
                             </div>
                         </td>
                     </tr>

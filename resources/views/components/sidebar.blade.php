@@ -63,12 +63,6 @@
                     <i class="fa-solid fa-users-gear w-5 text-center mr-3 {{ request()->routeIs('staff-divisi.*') ? 'text-white' : 'text-blue-200 group-hover:text-white' }}"></i>
                     Staff Divisi
                 </a>
-
-                <a href="{{ route('manager.laporan.index') }}"
-                   class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {{ request()->routeIs('manager.laporan.*') ? 'text-white font-semibold bg-white/15 shadow-sm' : 'text-blue-100 hover:bg-white/10 hover:text-white' }}">
-                    <i class="fa-solid fa-circle-exclamation w-5 text-center mr-3 {{ request()->routeIs('manager.laporan.*') ? 'text-white' : 'text-blue-200 group-hover:text-white' }}"></i>
-                    Laporan Masalah
-                </a>
             @endif
 
             @if(Auth::user()->nama_role === 'staff')

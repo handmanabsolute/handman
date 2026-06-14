@@ -28,64 +28,62 @@
         </div>
     @endif
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+    <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-6">
 
-        
-        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+        <div class="pb-6 border-b border-gray-100 space-y-6">
             <div>
                 <span class="px-2.5 py-0.5 text-xs font-semibold rounded-lg bg-indigo-50 text-[#3B28CC] border border-indigo-100">
-                    {{ $tugas->kategoritugas }}
+                    {{ $tugas->kategoritugas === 'Kelompok' ? 'Departemen' : $tugas->kategoritugas }}
                 </span>
-                <h2 class="text-lg font-bold text-gray-800 mt-2">{{ $tugas->nama_tugas }}</h2>
+                <h2 class="text-xl font-bold text-gray-900 mt-2.5">{{ $tugas->nama_tugas }}</h2>
             </div>
 
-            <div class="space-y-4 text-sm border-t border-gray-50 pt-4">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 bg-gray-50/50 p-4 rounded-xl border border-gray-100/50 text-sm">
                 <div>
-                    <span class="block font-medium text-gray-400 text-xs">Prioritas</span>
+                    <span class="block font-semibold text-gray-400 text-xs uppercase tracking-wider">Prioritas</span>
                     @if($tugas->prioritas == 'Tinggi')
-                        <span class="inline-block mt-1 px-2.5 py-0.5 text-xs font-medium bg-red-50 text-red-700 rounded-lg">{{ $tugas->prioritas }}</span>
+                        <span class="inline-block mt-1.5 px-2.5 py-0.5 text-xs font-bold bg-red-50 text-red-700 rounded-lg border border-red-100">{{ $tugas->prioritas }}</span>
                     @elseif($tugas->prioritas == 'Sedang')
-                        <span class="inline-block mt-1 px-2.5 py-0.5 text-xs font-medium bg-amber-50 text-amber-700 rounded-lg">{{ $tugas->prioritas }}</span>
+                        <span class="inline-block mt-1.5 px-2.5 py-0.5 text-xs font-bold bg-amber-50 text-amber-700 rounded-lg border border-amber-100">{{ $tugas->prioritas }}</span>
                     @else
-                        <span class="inline-block mt-1 px-2.5 py-0.5 text-xs font-medium bg-green-50 text-green-700 rounded-lg">{{ $tugas->prioritas }}</span>
+                        <span class="inline-block mt-1.5 px-2.5 py-0.5 text-xs font-bold bg-green-50 text-green-700 rounded-lg border border-green-100">{{ $tugas->prioritas }}</span>
                     @endif
                 </div>
                 <div>
-                    <span class="block font-medium text-gray-400 text-xs">Tanggal Diberikan</span>
-                    <span class="text-gray-800 font-medium">{{ \Carbon\Carbon::parse($tugas->tanggal_tugas)->format('d F Y, H:i') }}</span>
+                    <span class="block font-semibold text-gray-400 text-xs uppercase tracking-wider">Tanggal Diberikan</span>
+                    <span class="text-gray-800 font-medium block mt-1.5">{{ \Carbon\Carbon::parse($tugas->tanggal_tugas)->format('d F Y, H:i') }}</span>
                 </div>
                 <div>
-                    <span class="block font-medium text-gray-400 text-xs">Batas Akhir Selesai</span>
-                    <span class="text-red-600 font-semibold">{{ \Carbon\Carbon::parse($tugas->deadline_tugas)->format('d F Y, H:i') }}</span>
+                    <span class="block font-semibold text-gray-400 text-xs uppercase tracking-wider">Batas Akhir Selesai</span>
+                    <span class="text-red-600 font-semibold block mt-1.5">{{ \Carbon\Carbon::parse($tugas->deadline_tugas)->format('d F Y, H:i') }}</span>
                 </div>
                 <div>
-                    <span class="block font-medium text-gray-400 text-xs">Status Saat Ini</span>
-                    @if($tugas->status_tugas == 'Selesai')
-                        <span class="inline-flex items-center gap-1.5 mt-1 px-2.5 py-0.5 text-xs font-medium bg-green-50 text-green-700 rounded-lg">Selesai</span>
-                    @elseif($tugas->status_tugas == 'Menunggu Persetujuan')
-                        <span class="inline-flex items-center gap-1.5 mt-1 px-2.5 py-0.5 text-xs font-medium bg-blue-50 text-blue-700 rounded-lg">Menunggu Persetujuan</span>
-                    @elseif($tugas->status_tugas == 'Revisi')
-                        <span class="inline-flex items-center gap-1.5 mt-1 px-2.5 py-0.5 text-xs font-medium bg-rose-50 text-rose-700 rounded-lg">Revisi</span>
-                    @else
-                        <span class="inline-flex items-center gap-1.5 mt-1 px-2.5 py-0.5 text-xs font-medium bg-gray-50 text-gray-700 rounded-lg">Belum Dikerjakan</span>
-                    @endif
+                    <span class="block font-semibold text-gray-400 text-xs uppercase tracking-wider">Status Saat Ini</span>
+                    <div class="mt-1.5">
+                        @if($tugas->status_tugas == 'Selesai')
+                            <span class="px-2.5 py-0.5 text-xs font-bold bg-green-50 text-green-700 rounded-lg border border-green-100">Selesai</span>
+                        @elseif($tugas->status_tugas == 'Menunggu Persetujuan')
+                            <span class="px-2.5 py-0.5 text-xs font-bold bg-blue-50 text-blue-700 rounded-lg border border-blue-100">Menunggu Persetujuan</span>
+                        @elseif($tugas->status_tugas == 'Revisi')
+                            <span class="px-2.5 py-0.5 text-xs font-bold bg-rose-50 text-rose-700 rounded-lg border border-rose-100">Revisi</span>
+                        @else
+                            <span class="px-2.5 py-0.5 text-xs font-bold bg-gray-50 text-gray-700 rounded-lg border border-gray-200">Belum Dikerjakan</span>
+                        @endif
+                    </div>
                 </div>
                 @if($tugas->kategoritugas === 'Individu' && $tugas->detailTugas && $tugas->detailTugas->user)
                 <div>
-                    <span class="block font-medium text-gray-400 text-xs">Penerima Tugas</span>
-                    <span class="text-gray-800 font-semibold mt-1 inline-block">{{ $tugas->detailTugas->user->nama_lengkap }} (Individu)</span>
+                    <span class="block font-semibold text-gray-400 text-xs uppercase tracking-wider">Penerima Tugas</span>
+                    <span class="text-gray-800 font-semibold block mt-1.5">{{ $tugas->detailTugas->user->nama_lengkap }}</span>
                 </div>
                 @elseif($tugas->kategoritugas === 'Kelompok' && $tugas->detailTugas && $tugas->detailTugas->grupKerja)
                 <div>
-                    <span class="block font-medium text-gray-400 text-xs">Penerima Tugas</span>
-                    <span class="text-gray-800 font-semibold mt-1 inline-block">{{ $tugas->detailTugas->grupKerja->nama_grup }} (Grup Kerja)</span>
+                    <span class="block font-semibold text-gray-400 text-xs uppercase tracking-wider">Penerima Tugas</span>
+                    <span class="text-gray-800 font-semibold block mt-1.5">{{ $tugas->detailTugas->grupKerja->nama_grup }}</span>
                 </div>
                 @endif
             </div>
         </div>
-
-        
-        <div class="lg:col-span-2 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-6">
             
             
             <div class="space-y-2">
@@ -248,7 +246,7 @@
                 <div class="space-y-4">
                     <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Formulir Lampiran Hasil Kerja</h4>
                     
-                    <form action="{{ route('tugas.submit', $tugas->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    <form id="form-submit-tugas" action="{{ route('tugas.submit', $tugas->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                         @csrf
 
                         @if ($errors->any())
@@ -277,6 +275,7 @@
                                         <i class="fa-solid fa-eye text-[10px]"></i> Preview Gambar
                                     </button>
                                 </div>
+                                <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-gambar_file"></p>
                             </div>
 
                             <div class="space-y-1.5">
@@ -294,17 +293,19 @@
                                         <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Preview Dokumen
                                     </button>
                                 </div>
+                                <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-nama_file"></p>
                             </div>
                         </div>
 
                         <div class="space-y-1.5">
-                            <label for="link_tugas" class="block text-[10px] font-bold uppercase tracking-wider text-gray-400">Tautan Kerja / Workspace Link (Opsional)</label>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-gray-400">Tautan Kerja / Workspace Link (Opsional)</label>
                             <div class="relative rounded-xl shadow-sm">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                     <i class="fa-solid fa-link text-sm"></i>
                                 </div>
                                 <input type="url" name="link_tugas" id="link_tugas" value="{{ old('link_tugas') }}" class="block w-full pl-10 pr-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-[#3B28CC] focus:ring-1 focus:ring-[#3B28CC] outline-none transition-all placeholder-gray-400" placeholder="https://example.com/your-work-link">
                             </div>
+                            <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-link_tugas"></p>
                         </div>
 
                         <div class="flex items-center justify-end pt-4 border-t border-gray-100">
@@ -334,7 +335,6 @@
             @endif
 
         </div>
-
     </div>
 </div>
 
@@ -360,5 +360,9 @@
             window.open(url, '_blank');
         }
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initRealTimeValidation('form-submit-tugas');
+    });
 </script>
 @endsection

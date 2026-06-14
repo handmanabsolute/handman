@@ -48,6 +48,7 @@ test('admin can update password and upload photo but email remains unchanged', f
     $response = $this->actingAs($admin)->put(route('profil.update'), [
         'email'       => 'newadmin@example.com', // attempting to change email
         'password'    => 'NewPassword123!',
+        'password_confirmation' => 'NewPassword123!',
         'foto_profil' => $file,
     ]);
 
@@ -112,6 +113,7 @@ test('manager/staff can update allowed fields and photo but restricted fields re
         'alamat'         => 'New Address',
         'deskripsi_user' => 'New Description',
         'password'       => 'NewPass123!',
+        'password_confirmation' => 'NewPass123!',
         'foto_profil'    => $file,
     ]);
 

@@ -16,7 +16,20 @@ class c_kelolaAkun extends Controller
 {
     public function index(Request $request)
     {
-        $users = User::with('departemen')->where('nama_role', '!=', 'admin')->get();
+        $query = User::with('departemen')->where('nama_role', '!=', 'admin');
+
+        if ($request->filled('search')) {
+            $query->where(function($q) use ($request) {
+                $q->where('nama_lengkap', 'like', '%' . $request->search . '%')
+                  ->orWhere('email', 'like', '%' . $request->search . '%')
+                  ->orWhere('no_telp', 'like', '%' . $request->search . '%')
+                  ->orWhereHas('departemen', function($dq) use ($request) {
+                      $dq->where('nama_departemen', 'like', '%' . $request->search . '%');
+                  });
+            });
+        }
+
+        $users = $query->get();
 
         if ($request->ajax()) {
             return view('admin.kelola-akun.index', compact('users'));

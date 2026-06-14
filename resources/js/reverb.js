@@ -37,11 +37,6 @@ const echoInstance = new Echo({
 });
 
 if (currentUserId) {
-    const toastContainer = document.createElement('div');
-    toastContainer.className = 'fixed top-4 right-4 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none';
-    toastContainer.id = 'realtime-toast-container';
-    document.body.appendChild(toastContainer);
-
     const updateAppBody = () => {
         console.log('Updating application body...');
         fetch(window.location.href, {
@@ -69,48 +64,50 @@ if (currentUserId) {
         });
     };
 
-    const showToast = (title, message, type) => {
-        const toast = document.createElement('div');
-        toast.className = 'pointer-events-auto bg-white border border-gray-200 rounded-2xl shadow-xl p-4 transition-all duration-300 transform translate-y-2 opacity-0 flex items-start gap-3';
-        
-        let iconHtml = '';
-        if (type === 'tugas') {
-            iconHtml = '<div class="p-2 bg-indigo-50 text-indigo-600 rounded-xl"><i class="fa-solid fa-clipboard-list"></i></div>';
-        } else {
-            iconHtml = '<div class="p-2 bg-amber-50 text-amber-600 rounded-xl"><i class="fa-solid fa-file-invoice"></i></div>';
-        }
-
-        toast.innerHTML = `
-            ${iconHtml}
-            <div class="flex-1 min-w-0">
-                <h4 class="text-sm font-semibold text-gray-900">${title}</h4>
-                <p class="text-xs text-gray-500 mt-1">${message}</p>
-                <div class="mt-2.5 flex items-center gap-2">
-                    <button id="toast-segarkan-btn" class="bg-[#3B28CC] text-white px-2.5 py-1 rounded-lg text-xs font-semibold hover:bg-[#2c1fa3] transition-colors">Segarkan</button>
-                    <button onclick="this.closest('.pointer-events-auto').remove()" class="text-gray-400 hover:text-gray-600 text-xs px-2 py-1">Tutup</button>
-                </div>
-            </div>
-        `;
-
-        const segarkanBtn = toast.querySelector('#toast-segarkan-btn');
-        if (segarkanBtn) {
-            segarkanBtn.addEventListener('click', () => {
-                updateAppBody();
-                toast.remove();
-            });
-        }
-
-        toastContainer.appendChild(toast);
-        setTimeout(() => {
-            toast.classList.remove('translate-y-2', 'opacity-0');
-        }, 10);
-
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.classList.add('opacity-0');
-                setTimeout(() => toast.remove(), 300);
+    const updateNotifications = () => {
+        console.log('Updating notifications only...');
+        fetch(window.location.href, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
             }
-        }, 10000);
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.text();
+        })
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newNotifBtn = doc.getElementById('notif-menu-btn');
+            const newNotifMenu = doc.getElementById('notif-menu');
+            const currentNotifBtn = document.getElementById('notif-menu-btn');
+            const currentNotifMenu = document.getElementById('notif-menu');
+            
+            if (newNotifBtn && currentNotifBtn) {
+                currentNotifBtn.outerHTML = newNotifBtn.outerHTML;
+            }
+            if (newNotifMenu && currentNotifMenu) {
+                const wasHidden = currentNotifMenu.classList.contains('hidden');
+                currentNotifMenu.outerHTML = newNotifMenu.outerHTML;
+                const freshNotifMenu = document.getElementById('notif-menu');
+                if (freshNotifMenu) {
+                    if (wasHidden) {
+                        freshNotifMenu.classList.add('hidden');
+                        freshNotifMenu.style.opacity = '0';
+                        freshNotifMenu.style.transform = 'scale(0.95)';
+                    } else {
+                        freshNotifMenu.classList.remove('hidden');
+                        freshNotifMenu.style.opacity = '1';
+                        freshNotifMenu.style.transform = 'scale(1)';
+                    }
+                }
+            }
+            console.log('Notifications updated successfully');
+        })
+        .catch(error => {
+            console.error('Error fetching real-time notifications update:', error);
+        });
     };
 
     const isTaskPage = window.location.pathname.includes('/tugas') || window.location.pathname.includes('/staff/tugas');
@@ -120,24 +117,28 @@ if (currentUserId) {
     const handleTugasEvent = (e) => {
         console.log('Tugas event received:', e);
         if (currentUserRole === 'staff' && e.action === 'created') {
-            showToast(e.title, e.message, 'tugas');
             if (isTaskPage || isDashboard) {
                 updateAppBody();
+            } else {
+                updateNotifications();
             }
         } else if (currentUserRole === 'manager' && e.action === 'submitted') {
-            showToast(e.title, e.message, 'tugas');
             if (isTaskPage || isDashboard) {
                 updateAppBody();
+            } else {
+                updateNotifications();
             }
         } else if (currentUserRole === 'staff' && e.action === 'reviewed') {
-            showToast(e.title, e.message, 'tugas');
             if (isTaskPage || isDashboard) {
                 updateAppBody();
+            } else {
+                updateNotifications();
             }
         } else if (e.action === 'updated') {
-            showToast(e.title, e.message, 'tugas');
             if (isTaskPage || isDashboard) {
                 updateAppBody();
+            } else {
+                updateNotifications();
             }
         }
     };
@@ -145,14 +146,16 @@ if (currentUserId) {
     const handleLaporanEvent = (e) => {
         console.log('Laporan event received:', e);
         if (currentUserRole === 'admin' && e.action === 'created') {
-            showToast(e.title, e.message, 'laporan');
             if (isReportPage || isDashboard) {
                 updateAppBody();
+            } else {
+                updateNotifications();
             }
         } else if (e.action === 'responded' && String(e.userId) === String(currentUserId)) {
-            showToast(e.title, e.message, 'laporan');
             if (isReportPage || isDashboard) {
                 updateAppBody();
+            } else {
+                updateNotifications();
             }
         }
     };

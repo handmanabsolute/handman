@@ -54,6 +54,7 @@ class User extends Authenticatable
     public function grupKerjas(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(GrupKerja::class, 'detail_grups', 'user_id', 'grup_kerja_id')
+                    ->using(DetailGrup::class)
                     ->withTimestamps();
     }
 }

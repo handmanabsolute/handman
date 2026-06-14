@@ -29,7 +29,7 @@
                             <td class="p-4 font-medium text-gray-900">{{ $item->nama_tugas }}</td>
                             <td class="p-4">
                                 <span class="px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-700 rounded-lg">
-                                    {{ $item->kategoritugas }}
+                                    {{ $item->kategoritugas === 'Kelompok' ? 'Departemen' : $item->kategoritugas }}
                                 </span>
                             </td>
                             <td class="p-4">

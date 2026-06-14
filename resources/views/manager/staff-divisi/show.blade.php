@@ -104,13 +104,17 @@
                                     <p class="text-sm font-bold text-gray-800 truncate">{{ $grup->nama_grup }}</p>
                                     <p class="text-[10px] text-gray-400 mt-0.5 uppercase tracking-wider">{{ $grup->anggota->count() }} Anggota</p>
                                 </div>
-                                <form action="{{ route('staff-divisi.leave-group', $staff->id) }}" method="POST" onsubmit="return confirm('Keluarkan staff dari grup ini?')">
-                                    @csrf
-                                    <input type="hidden" name="grup_kerja_id" value="{{ $grup->id }}">
-                                    <button type="submit" class="w-8 h-8 rounded-lg border border-rose-100 hover:bg-rose-50 flex items-center justify-center text-rose-500 transition-colors" title="Keluarkan dari Grup">
-                                        <i class="fa-solid fa-user-minus text-xs"></i>
-                                    </button>
-                                </form>
+                                <button type="button" onclick="openModal('leave-group-{{ $grup->id }}')" class="w-8 h-8 rounded-lg border border-rose-100 hover:bg-rose-50 flex items-center justify-center text-rose-500 transition-colors" title="Keluarkan dari Grup">
+                                    <i class="fa-solid fa-user-minus text-xs"></i>
+                                </button>
+                                <x-confirm-modal 
+                                    id="leave-group-{{ $grup->id }}" 
+                                    title="Keluarkan dari Grup" 
+                                    message="Apakah Anda yakin ingin mengeluarkan staff ini dari grup '{{ addslashes($grup->nama_grup) }}'?" 
+                                    action="{{ route('staff-divisi.leave-group', ['id' => $staff->id, 'grup_kerja_id' => $grup->id]) }}" 
+                                    method="POST" 
+                                    type="danger" 
+                                />
                             </div>
                         @endforeach
                     </div>
@@ -121,7 +125,7 @@
                 
                 @if($grups->count() > 0)
                     <div class="pt-4 border-t border-gray-100">
-                        <form action="{{ route('staff-divisi.join-group', $staff->id) }}" method="POST" class="flex flex-col sm:flex-row sm:items-end gap-3 max-w-md">
+                        <form id="form-join-group" action="{{ route('staff-divisi.join-group', $staff->id) }}" method="POST" class="flex flex-col sm:flex-row sm:items-end gap-3 max-w-md">
                             @csrf
                             <div class="flex-1 space-y-1.5">
                                 <label for="grup_kerja_id" class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Masukkan ke Grup Kerja</label>
@@ -131,6 +135,7 @@
                                         <option value="{{ $g->id }}">{{ $g->nama_grup }} ({{ $g->anggota->count() }} Anggota)</option>
                                     @endforeach
                                 </select>
+                                <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-grup_kerja_id"></p>
                             </div>
                             <button type="submit" class="px-4 py-2.5 bg-[#3B28CC] text-white text-sm font-bold rounded-xl hover:bg-opacity-95 transition flex items-center justify-center gap-1.5 shrink-0 shadow-sm cursor-pointer">
                                 <i class="fa-solid fa-user-plus text-xs"></i> Masukkan Grup
@@ -144,7 +149,7 @@
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
                 <div class="border-b border-gray-50 pb-3">
                     <h3 class="font-bold text-gray-900">Daftar Tugas Terkait</h3>
-                    <p class="text-xs text-gray-400 mt-0.5">Penugasan individu maupun kelompok yang melibatkan staff ini.</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Penugasan individu maupun departemen yang melibatkan staff ini.</p>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -181,7 +186,7 @@
                                     </td>
                                     <td class="p-3">
                                         <span class="px-2 py-0.5 font-semibold rounded-md border {{ $t->kategoritugas === 'Kelompok' ? 'bg-indigo-50 text-indigo-700 border-indigo-100' : 'bg-gray-50 text-gray-700 border-gray-200' }}">
-                                            {{ $t->kategoritugas }}
+                                            {{ $t->kategoritugas === 'Kelompok' ? 'Departemen' : $t->kategoritugas }}
                                         </span>
                                     </td>
                                     <td class="p-3">
@@ -211,4 +216,9 @@
 
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    initRealTimeValidation('form-join-group');
+});
+</script>
 @endsection

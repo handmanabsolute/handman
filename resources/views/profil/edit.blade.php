@@ -84,6 +84,17 @@
                             </div>
                             <p class="text-xs text-red-600 error-msg hidden" id="error-password"></p>
                         </div>
+
+                        <div class="space-y-1.5 md:col-span-2">
+                            <label class="text-sm font-medium text-gray-700">Konfirmasi Password Baru</label>
+                            <div class="relative w-full">
+                                <input type="password" id="password_confirmation" name="password_confirmation" class="w-full px-4 py-2.5 mt-1.5 pr-11 text-sm text-gray-800 bg-white border border-gray-200 rounded-xl focus:border-[#3B28CC] focus:ring-1 focus:ring-[#3B28CC] outline-none transition-all">
+                                <button type="button" onclick="const p = document.getElementById('password_confirmation'); p.type = p.type === 'password' ? 'text' : 'password'; this.querySelector('i').classList.toggle('fa-eye'); this.querySelector('i').classList.toggle('fa-eye-slash');" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
+                                    <i class="fa-solid fa-eye text-sm"></i>
+                                </button>
+                            </div>
+                            <p class="text-xs text-red-600 error-msg hidden" id="error-password_confirmation"></p>
+                        </div>
                     @else
                         
                         <div class="space-y-1.5">
@@ -153,6 +164,17 @@
                                 </button>
                             </div>
                             <p class="text-xs text-red-600 error-msg hidden" id="error-password"></p>
+                        </div>
+
+                        <div class="space-y-1.5 md:col-span-2">
+                            <label class="text-sm font-medium text-gray-700">Konfirmasi Password Baru</label>
+                            <div class="relative w-full">
+                                <input type="password" id="password_confirmation" name="password_confirmation" class="w-full px-4 py-2.5 mt-1.5 pr-11 text-sm text-gray-800 bg-white border border-gray-200 rounded-xl focus:border-[#3B28CC] focus:ring-1 focus:ring-[#3B28CC] outline-none transition-all">
+                                <button type="button" onclick="const p = document.getElementById('password_confirmation'); p.type = p.type === 'password' ? 'text' : 'password'; this.querySelector('i').classList.toggle('fa-eye'); this.querySelector('i').classList.toggle('fa-eye-slash');" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
+                                    <i class="fa-solid fa-eye text-sm"></i>
+                                </button>
+                            </div>
+                            <p class="text-xs text-red-600 error-msg hidden" id="error-password_confirmation"></p>
                         </div>
                     @endif
                 </div>

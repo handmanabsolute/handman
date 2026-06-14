@@ -47,62 +47,44 @@
                 </div>
                 <p class="font-semibold text-gray-500">Belum ada laporan</p>
                 <p class="text-xs text-gray-400 max-w-xs">Semua laporan pengaduan yang Anda buat akan tampil di sini beserta tanggapan dari Admin.</p>
-                <button type="button" onclick="openLaporModal()"
-                        class="mt-2 bg-[#3B28CC] text-white px-4 py-2 rounded-xl text-xs font-semibold hover:bg-[#2c1fa3] transition-colors cursor-pointer">
-                    Kirim Laporan Pertama
-                </button>
             </div>
         </div>
     @else
         <div class="space-y-4">
             @foreach($laporans as $laporan)
-            <div class="bg-white border border-gray-100 rounded-2xl shadow-xs overflow-hidden">
-                <div class="p-5 sm:p-6 space-y-4">
+            <div class="bg-white border border-gray-100 rounded-2xl shadow-xs overflow-hidden hover:shadow-md transition-shadow">
+                <div class="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     
-                    <div class="flex flex-wrap items-start justify-between gap-3">
-                        <div class="space-y-1">
-                            <h3 class="text-base font-bold text-gray-900">{{ $laporan->judul }}</h3>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
                             <p class="text-xs text-gray-400">Dikirim {{ \Carbon\Carbon::parse($laporan->created_at)->translatedFormat('d M Y, H:i') }}</p>
                         </div>
-                        <div>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-lg border
+                        <p class="text-sm text-gray-600 mt-2 line-clamp-1 font-medium">{{ $laporan->isi }}</p>
+                    </div>
+
+                    <div class="flex items-center gap-3 self-end sm:self-center shrink-0">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-lg border
+                            {{ $laporan->status === 'Menunggu'
+                                ? 'bg-amber-50 text-amber-700 border-amber-100'
+                                : ($laporan->status === 'Dibalas'
+                                    ? 'bg-blue-50 text-blue-700 border-blue-100'
+                                    : 'bg-green-50 text-green-700 border-green-100') }}">
+                            <span class="w-1.5 h-1.5 rounded-full
                                 {{ $laporan->status === 'Menunggu'
-                                    ? 'bg-amber-50 text-amber-700 border-amber-100'
+                                    ? 'bg-amber-500'
                                     : ($laporan->status === 'Dibalas'
-                                        ? 'bg-blue-50 text-blue-700 border-blue-100'
-                                        : 'bg-green-50 text-green-700 border-green-100') }}">
-                                <span class="w-1.5 h-1.5 rounded-full
-                                    {{ $laporan->status === 'Menunggu'
-                                        ? 'bg-amber-500'
-                                        : ($laporan->status === 'Dibalas'
-                                            ? 'bg-blue-500'
-                                            : 'bg-green-500') }}"></span>
-                                {{ $laporan->status === 'Menunggu' ? 'Menunggu Tanggapan' : $laporan->status }}
-                            </span>
-                        </div>
+                                        ? 'bg-blue-500'
+                                        : 'bg-green-500') }}"></span>
+                            {{ $laporan->status === 'Menunggu' ? 'Belum Dibalas' : $laporan->status }}
+                        </span>
+                        
+                        <a href="{{ route('laporan.show', $laporan->id) }}"
+                           class="bg-white border border-gray-200 text-gray-700 hover:text-[#3B28CC] hover:bg-indigo-50/50 px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
+                            Lihat Detail
+                        </a>
                     </div>
 
-                    
-                    <div class="text-sm text-gray-600 leading-relaxed bg-gray-50/50 p-4 rounded-xl border border-gray-50">
-                        {{ $laporan->isi }}
-                    </div>
-
-                    
-                    @if($laporan->tanggapan)
-                        <div class="border-t border-gray-100 pt-4 mt-2 space-y-3">
-                            <div class="flex items-center gap-2 text-xs font-bold text-gray-500">
-                                <i class="fa-solid fa-reply text-indigo-500 rotate-180"></i>
-                                Tanggapan dari Admin
-                            </div>
-                            <div class="bg-indigo-50/30 border border-indigo-50/50 rounded-xl p-4 space-y-2">
-                                <p class="text-sm text-gray-700 leading-relaxed">{{ $laporan->tanggapan }}</p>
-                                <div class="flex items-center justify-between text-[10px] text-gray-400 pt-1">
-                                    <span>Oleh <span class="font-semibold text-gray-600">{{ $laporan->responder->nama_lengkap ?? 'Admin' }}</span></span>
-                                    <span>{{ \Carbon\Carbon::parse($laporan->responded_at)->translatedFormat('d M Y, H:i') }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
                 </div>
             </div>
             @endforeach
@@ -133,24 +115,14 @@
             <form method="POST" action="{{ route('staff.laporan.store') }}" id="form-lapor">
                 @csrf
                 <div class="p-6 space-y-4">
-                    
                     <div class="space-y-1.5">
                         <label class="text-xs font-bold text-gray-600 uppercase tracking-wider block">
-                            Subjek / Judul Laporan <span class="text-red-500">*</span>
+                            Pertanyaan <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="judul" required
-                               placeholder="Contoh: AC Ruangan Pecah / Masalah Gaji..."
-                               class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all">
-                    </div>
-
-                    
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-bold text-gray-600 uppercase tracking-wider block">
-                            Detail Pengaduan <span class="text-red-500">*</span>
-                        </label>
-                        <textarea name="isi" rows="6" required
-                                  placeholder="Jelaskan secara rinci mengenai masalah yang Anda hadapi..."
+                        <textarea name="pertanyaan" rows="6" required
+                                  placeholder="Tuliskan pertanyaan Anda..."
                                   class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all resize-none"></textarea>
+                        <p class="text-xs text-red-600 error-msg hidden" id="error-pertanyaan"></p>
                     </div>
                 </div>
 
@@ -186,6 +158,10 @@ document.getElementById('form-lapor')?.addEventListener('submit', function() {
     const btn = document.getElementById('btn-submit-lapor');
     btn.disabled = true;
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> Mengirim...';
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    initRealTimeValidation('form-lapor');
 });
 </script>
 @endsection

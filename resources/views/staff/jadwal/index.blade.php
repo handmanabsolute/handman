@@ -159,7 +159,7 @@
             </div>
 
             
-            <form id="note-form" onsubmit="submitNoteForm(event)" class="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-4">
+            <form id="note-form" action="/jadwal/notes" onsubmit="submitNoteForm(event)" class="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-4">
                 @csrf
                 <input type="hidden" id="note-date" name="tanggal" value="">
                 <input type="hidden" id="note-id" name="note_id" value="">
@@ -167,6 +167,7 @@
                 <div class="space-y-1.5">
                     <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Catatan Penting (<span id="detail-note-date-label"></span>)</label>
                     <textarea id="note-content" name="catatan" rows="3" placeholder="Masukkan catatan agenda, rapat, atau catatan tugas di sini..." required class="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] text-gray-800 transition-all"></textarea>
+                    <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-catatan"></p>
                 </div>
 
                 <div class="flex items-center justify-end gap-2 pt-1">

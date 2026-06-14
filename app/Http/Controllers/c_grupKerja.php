@@ -21,7 +21,7 @@ class c_grupKerja extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'nama_grup'   => 'required|string|max:200',
             'deskripsi'   => 'nullable|string',
             'anggota_ids' => 'nullable|array',
@@ -30,6 +30,18 @@ class c_grupKerja extends Controller
             'nama_grup.required'    => 'Nama grup wajib diisi.',
             'nama_grup.max'         => 'Nama grup maksimal 200 karakter.',
         ]);
+
+        if ($request->hasHeader('X-Validate-Only')) {
+            if ($validator->fails()) {
+                return response()->json([
+                    'valid' => false,
+                    'errors' => $validator->errors()
+                ], 200);
+            }
+            return response()->json(['valid' => true], 200);
+        }
+
+        $validator->validate();
 
         $departemenId = auth()->user()->departemen_id;
 

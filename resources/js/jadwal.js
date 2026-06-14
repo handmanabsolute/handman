@@ -83,6 +83,10 @@ function editNote(id, catatan) {
     document.getElementById('btn-submit-note').innerText = 'Simpan Perubahan';
     document.getElementById('btn-cancel-edit').classList.remove('hidden');
     document.getElementById('note-content').focus();
+    const form = document.getElementById('note-form');
+    if (form) {
+        form.action = `/jadwal/notes/${id}`;
+    }
 }
 
 function resetNoteForm() {
@@ -90,6 +94,10 @@ function resetNoteForm() {
     document.getElementById('note-content').value = '';
     document.getElementById('btn-submit-note').innerText = 'Simpan Catatan';
     document.getElementById('btn-cancel-edit').classList.add('hidden');
+    const form = document.getElementById('note-form');
+    if (form) {
+        form.action = '/jadwal/notes';
+    }
 }
 
 function submitNoteForm(event) {
@@ -240,6 +248,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (firstCell) {
             firstCell.click();
         }
+    }
+    if (typeof initRealTimeValidation === 'function') {
+        initRealTimeValidation('note-form');
     }
 });
 

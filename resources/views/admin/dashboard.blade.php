@@ -17,52 +17,39 @@
     
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
 
-        
-        <a href="{{ route('kelola-akun.index') }}"
-           class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
             <div class="space-y-1">
-                <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Total Pegawai</span>
-                <h3 class="text-2xl font-bold text-gray-800">{{ $totalPegawai }}</h3>
-                <p class="text-[10px] text-gray-400">
-                    <span class="text-green-600 font-semibold">{{ $pegawaiAktif }} aktif</span>
-                    &nbsp;·&nbsp;
-                    <span class="text-rose-500 font-semibold">{{ $pegawaiNonAktif }} non-aktif</span>
-                </p>
+                <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Pegawai Aktif</span>
+                <h3 class="text-2xl font-bold text-green-600">{{ $pegawaiAktif }}</h3>
+                <p class="text-[10px] text-gray-400">Pegawai aktif saat ini</p>
             </div>
-            <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-[#3B28CC] group-hover:bg-indigo-100 transition-colors">
-                <i class="fa-solid fa-users text-xl"></i>
+            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600">
+                <i class="fa-solid fa-user-check text-xl"></i>
             </div>
-        </a>
+        </div>
 
-        
-        <a href="{{ route('admin.tugas.index', ['status' => 'Selesai']) }}"
-           class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+            <div class="space-y-1">
+                <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Pegawai Non-aktif</span>
+                <h3 class="text-2xl font-bold text-rose-500">{{ $pegawaiNonAktif }}</h3>
+                <p class="text-[10px] text-gray-400">Pegawai non-aktif saat ini</p>
+            </div>
+            <div class="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600">
+                <i class="fa-solid fa-user-xmark text-xl"></i>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
             <div class="space-y-1">
                 <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Tugas Selesai</span>
                 <h3 class="text-2xl font-bold text-green-600">{{ $tugasSelesai }}</h3>
                 <p class="text-[10px] text-gray-400">dari {{ $totalTugas }} total tugas</p>
             </div>
-            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-100 transition-colors">
+            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600">
                 <i class="fa-solid fa-circle-check text-xl"></i>
             </div>
-        </a>
+        </div>
 
-        
-        <a href="{{ route('admin.tugas.index') }}"
-           class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group">
-            <div class="space-y-1">
-                <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Tugas Berjalan</span>
-                <h3 class="text-2xl font-bold text-amber-600">{{ $tugasBerjalan }}</h3>
-                <p class="text-[10px] text-gray-400">
-                    <span class="text-blue-500 font-semibold">{{ $tugasMenunggu }} menunggu review</span>
-                </p>
-            </div>
-            <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 group-hover:bg-amber-100 transition-colors">
-                <i class="fa-solid fa-clock text-xl"></i>
-            </div>
-        </a>
-
-        
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
             <div class="space-y-1">
                 <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Efisiensi Kerja</span>
@@ -78,8 +65,7 @@
         </div>
     </div>
 
-    
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 shrink-0">
         <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-3">
             <div class="w-10 h-10 bg-violet-50 rounded-xl flex items-center justify-center text-violet-600 shrink-0">
                 <i class="fa-solid fa-user-tie text-base"></i>
@@ -107,16 +93,6 @@
             <div>
                 <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Departemen</p>
                 <p class="text-xl font-bold text-gray-800">{{ $totalDepartemen }}</p>
-            </div>
-        </div>
-
-        <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-3">
-            <div class="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 shrink-0">
-                <i class="fa-solid fa-arrow-rotate-left text-base"></i>
-            </div>
-            <div>
-                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Tugas Revisi</p>
-                <p class="text-xl font-bold text-gray-800">{{ $tugasRevisi }}</p>
             </div>
         </div>
     </div>
