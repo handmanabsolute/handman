@@ -5,7 +5,6 @@
 @section('content')
 <div class="space-y-6 pb-12">
 
-
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shrink-0">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">Staff & Grup Kerja</h1>
@@ -18,14 +17,12 @@
         </div>
     </div>
 
-
     @if(session('success'))
         <div class="p-4 text-sm text-green-800 bg-green-50 border border-green-100 rounded-xl flex items-center gap-3">
             <i class="fa-solid fa-circle-check text-green-600 text-base shrink-0"></i>
             {{ session('success') }}
         </div>
     @endif
-
 
     <div class="border-b border-gray-200">
         <nav class="flex space-x-8" aria-label="Tabs">
@@ -85,7 +82,6 @@
             <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                 <div class="flex flex-wrap gap-3 items-end">
 
-
                     <div class="flex-1 min-w-50">
                         <label class="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Status Pegawai</label>
                         <select name="status" id="filter-status" class="w-full py-2 px-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all appearance-none cursor-pointer">
@@ -95,7 +91,6 @@
                             <option value="Skorsing" {{ request('status') === 'Skorsing' ? 'selected' : '' }}>Skorsing</option>
                         </select>
                     </div>
-
 
                     <div class="flex items-end gap-2">
                         <button type="submit" class="px-4 py-2 bg-[#3B28CC] text-white text-sm font-semibold rounded-xl hover:bg-[#2c1fa3] transition-colors flex items-center gap-2 cursor-pointer">
@@ -108,7 +103,6 @@
                         @endif
                     </div>
                 </div>
-
 
                 @php
                     $activeFilters = array_filter([
@@ -127,7 +121,6 @@
                 @endif
             </div>
         </form>
-
 
         @if($staffs->isEmpty())
             <div class="bg-white border border-gray-100 rounded-2xl p-12 text-center shadow-sm">
@@ -187,11 +180,8 @@
                     </table>
                 </div>
             </div>
-
         @endif
-
     </div>
-
 
     <div id="tab-content-grup-kerja" class="hidden space-y-6">
 
@@ -351,10 +341,7 @@
                                   class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all resize-none"></textarea>
                         <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-deskripsi"></p>
                     </div>
-
-
                 </div>
-
 
                 <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-end gap-3">
                     <button type="button" onclick="closeGrupModal()"
@@ -373,15 +360,11 @@
     </div>
 </div>
 
-
 <div id="modal-detail-grup" class="fixed inset-0 z-60 hidden" role="dialog" aria-modal="true">
-
     <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-sm" onclick="closeDetailGrupModal()"></div>
-
 
     <div class="absolute inset-0 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg border border-gray-100 overflow-hidden">
-
 
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                 <div>
@@ -401,7 +384,6 @@
                     <p class="text-sm text-gray-700 leading-relaxed" id="detail-grup-deskripsi">Tidak ada deskripsi.</p>
                 </div>
 
-
                 <div class="space-y-2">
                     <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block">
                         Anggota (<span id="detail-grup-anggota-count">0</span>)
@@ -411,7 +393,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
                 <form id="form-delete-grup" method="POST" action="">
@@ -432,10 +413,8 @@
 </div>
 
 <script>
-// Global data
 const allGroups = @json($grups);
 
-// Tab switching
 function switchTab(tabId) {
     document.getElementById('tab-content-staff-list').classList.add('hidden');
     document.getElementById('tab-content-grup-kerja').classList.add('hidden');
@@ -455,7 +434,6 @@ function switchTab(tabId) {
     }
 }
 
-// Set active tab on load
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const tab = urlParams.get('tab') || '{{ session("tab") }}';
@@ -466,7 +444,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Row navigation
 document.querySelectorAll('.staff-row').forEach(row => {
     row.addEventListener('click', function() {
         window.location.href = "{{ url('staff-divisi') }}/" + this.dataset.id;
@@ -479,7 +456,6 @@ document.querySelectorAll('.grup-row').forEach(row => {
     });
 });
 
-// ─── Modal Buat Grup Kerja ─────────────────────────────────────
 function openGrupModal() {
     document.getElementById('input-nama-grup').value = '';
     document.getElementById('input-deskripsi').value = '';
@@ -490,7 +466,6 @@ function openGrupModal() {
     document.getElementById('input-nama-grup').focus();
 }
 
-// ─── Modal Detail Grup Kerja ───────────────────────────────────
 function showGroupDetail(id) {
     const grup = allGroups.find(g => g.id === id);
     if (!grup) return;
@@ -537,14 +512,12 @@ function closeDetailGrupModal() {
     document.body.style.overflow = 'auto';
 }
 
-// Submit loaders
 document.getElementById('form-grup')?.addEventListener('submit', function(e) {
     const btn = document.getElementById('btn-submit-grup');
     btn.disabled = true;
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> Memproses...';
 });
 
-// Auto-submit filters
 document.getElementById('filter-status')?.addEventListener('change', () => document.getElementById('filter-form').submit());
 
 document.addEventListener('DOMContentLoaded', () => {
