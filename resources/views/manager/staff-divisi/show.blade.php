@@ -5,7 +5,6 @@
 @section('content')
 <div class="space-y-6 pb-12">
 
-    
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shrink-0">
         <div class="flex items-center gap-4">
             <a href="{{ route('staff-divisi.index') }}" class="w-10 h-10 border border-gray-200 bg-white rounded-xl flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors">
@@ -18,7 +17,6 @@
         </div>
     </div>
 
-    
     @if(session('success'))
         <div class="p-4 text-sm text-green-800 bg-green-50 border border-green-100 rounded-xl flex items-center gap-3">
             <i class="fa-solid fa-circle-check text-green-600 text-base shrink-0"></i>
@@ -28,7 +26,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
 
-        
+
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden space-y-6 p-6">
             <div class="flex flex-col items-center text-center space-y-3">
                 <div class="relative">
@@ -83,10 +81,7 @@
             </div>
         </div>
 
-        
         <div class="lg:col-span-2 space-y-6">
-
-            
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
                 <div class="border-b border-gray-50 pb-3 flex items-center justify-between">
                     <div>
@@ -95,7 +90,7 @@
                     </div>
                 </div>
 
-                
+
                 @if($myGrups->count() > 0)
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         @foreach($myGrups as $grup)
@@ -107,14 +102,7 @@
                                 <button type="button" onclick="openModal('leave-group-{{ $grup->id }}')" class="w-8 h-8 rounded-lg border border-rose-100 hover:bg-rose-50 flex items-center justify-center text-rose-500 transition-colors" title="Keluarkan dari Grup">
                                     <i class="fa-solid fa-user-minus text-xs"></i>
                                 </button>
-                                <x-confirm-modal 
-                                    id="leave-group-{{ $grup->id }}" 
-                                    title="Keluarkan dari Grup" 
-                                    message="Apakah Anda yakin ingin mengeluarkan staff ini dari grup '{{ addslashes($grup->nama_grup) }}'?" 
-                                    action="{{ route('staff-divisi.leave-group', ['id' => $staff->id, 'grup_kerja_id' => $grup->id]) }}" 
-                                    method="POST" 
-                                    type="danger" 
-                                />
+                                <x-confirm-modal id="leave-group-{{ $grup->id }}" title="Keluarkan dari Grup" message="Apakah Anda yakin ingin mengeluarkan staff ini dari grup '{{ addslashes($grup->nama_grup) }}'?" action="{{ route('staff-divisi.leave-group', ['id' => $staff->id, 'grup_kerja_id' => $grup->id]) }}" method="POST" type="danger" />
                             </div>
                         @endforeach
                     </div>
@@ -122,7 +110,6 @@
                     <p class="text-xs text-gray-400 italic">Staff ini belum dimasukkan ke dalam grup kerja manapun.</p>
                 @endif
 
-                
                 @if($grups->count() > 0)
                     <div class="pt-4 border-t border-gray-100">
                         <form id="form-join-group" action="{{ route('staff-divisi.join-group', $staff->id) }}" method="POST" class="flex flex-col sm:flex-row sm:items-end gap-3 max-w-md">
@@ -145,7 +132,6 @@
                 @endif
             </div>
 
-            
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
                 <div class="border-b border-gray-50 pb-3">
                     <h3 class="font-bold text-gray-900">Daftar Tugas Terkait</h3>

@@ -59,16 +59,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profil/edit', [c_profil::class, 'edit'])->name('profil.edit');
     Route::put('/profil', [c_profil::class, 'update'])->name('profil.update');
 
-    // Notifications (Shared between Admin, Manager, & Staff)
     Route::get('/notifications/{id}/read', [\App\Http\Controllers\c_notification::class, 'read'])->name('notifications.read');
     Route::post('/notifications/read-all', [\App\Http\Controllers\c_notification::class, 'readAll'])->name('notifications.readAll');
     Route::delete('/notifications/{id}', [\App\Http\Controllers\c_notification::class, 'destroy'])->name('notifications.destroy');
-    
-    // Detail & Update Laporan (Shared)
+
     Route::get('/laporan/{id}', [c_laporan::class, 'show'])->name('laporan.show');
     Route::put('/laporan/{id}', [c_laporan::class, 'update'])->name('laporan.update');
 
-    // Kelola Jadwal Notes (Shared between Manager & Staff)
     Route::post('/jadwal/notes', [\App\Http\Controllers\c_kelolaJadwal::class, 'storeNote'])->name('jadwal.notes.store');
     Route::put('/jadwal/notes/{id}', [\App\Http\Controllers\c_kelolaJadwal::class, 'updateNote'])->name('jadwal.notes.update');
     Route::delete('/jadwal/notes/{id}', [\App\Http\Controllers\c_kelolaJadwal::class, 'destroyNote'])->name('jadwal.notes.destroy');
@@ -79,8 +76,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('departemen', c_departemen::class);
         Route::get('/admin/tugas/export-pdf', [c_adminTugas::class, 'exportPdf'])->name('admin.tugas.exportPdf');
         Route::get('/admin/tugas', [c_adminTugas::class, 'index'])->name('admin.tugas.index');
-        
-        // Rute Laporan Admin
+
         Route::get('/admin/laporan', [c_laporan::class, 'index'])->name('admin.laporan.index');
         Route::put('/admin/laporan/{id}/respon', [c_laporan::class, 'respond'])->name('admin.laporan.respon');
     });
@@ -88,7 +84,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:manager')->group(function () {
         Route::get('/manager/dashboard', function () {
             $departemenId = auth()->user()->departemen_id;
-            
+
             $totalTugas = \App\Models\Tugas::where('departemen_id', $departemenId)->count();
             $tugasSelesai = \App\Models\Tugas::where('departemen_id', $departemenId)->where('status_tugas', 'Selesai')->count();
             $tugasPending = \App\Models\Tugas::where('departemen_id', $departemenId)->where('status_tugas', 'Menunggu Persetujuan')->count();
@@ -101,21 +97,16 @@ Route::middleware('auth')->group(function () {
             $totalLaporan = \App\Models\Laporan::whereHas('user', function($q) use ($departemenId) { $q->where('departemen_id', $departemenId); })->count();
             $tugasKelompok = \App\Models\Tugas::where('departemen_id', $departemenId)->where('kategoritugas', 'Kelompok')->count();
 
-            $tugas = \App\Models\Tugas::where('departemen_id', $departemenId)
-                ->latest()
-                ->take(5)
-                ->get();
+            $tugas = \App\Models\Tugas::where('departemen_id', $departemenId) ->latest() ->take(5) ->get();
 
             $laporans = \App\Models\Laporan::whereHas('user', function($q) use ($departemenId) {
                     $q->where('departemen_id', $departemenId);
                 })
-                ->latest()
-                ->take(5)
-                ->get();
+                ->latest() ->take(5) ->get();
 
             return view('manager.dashboard', compact(
-                'tugas', 'totalTugas', 'tugasSelesai', 'tugasPending', 'tugasRevisi', 
-                'tugasBerjalan', 'efisiensi', 'staffCount', 'totalGrup', 'totalLaporan', 
+                'tugas', 'totalTugas', 'tugasSelesai', 'tugasPending', 'tugasRevisi',
+                'tugasBerjalan', 'efisiensi', 'staffCount', 'totalGrup', 'totalLaporan',
                 'tugasKelompok', 'laporans'
             ));
         })->name('manager.dashboard');
@@ -123,19 +114,15 @@ Route::middleware('auth')->group(function () {
         Route::resource('tugas', c_kelolaTugas::class);
         Route::put('/tugas/{id}/review', [c_kelolaTugas::class, 'reviewTugas'])->name('tugas.review');
 
-        // Kelola Jadwal Manager
         Route::get('/jadwal', [\App\Http\Controllers\c_kelolaJadwal::class, 'index'])->name('jadwal.index');
 
-        // Staff Divisi Manager
         Route::get('/staff-divisi', [c_staffDivisi::class, 'index'])->name('staff-divisi.index');
         Route::get('/staff-divisi/{id}', [c_staffDivisi::class, 'show'])->name('staff-divisi.show');
         Route::post('/staff-divisi/{id}/join-group', [c_staffDivisi::class, 'joinGroup'])->name('staff-divisi.join-group');
         Route::post('/staff-divisi/{id}/leave-group', [c_staffDivisi::class, 'leaveGroup'])->name('staff-divisi.leave-group');
 
-        // Grup Kerja Manager
         Route::resource('grup-kerja', c_grupKerja::class);
 
-        // Rute Laporan Manager
         Route::get('/laporan', [c_laporan::class, 'index'])->name('manager.laporan.index');
         Route::post('/laporan', [c_laporan::class, 'store'])->name('manager.laporan.store');
     });
@@ -144,7 +131,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/staff/dashboard', function () {
             $departemenId = auth()->user()->departemen_id;
             $userId = auth()->id();
-            
+
             $myGrupIds = \App\Models\GrupKerja::whereHas('anggota', function ($q) use ($userId) {
                 $q->where('users.id', $userId);
             })->pluck('id');
@@ -152,8 +139,7 @@ Route::middleware('auth')->group(function () {
             $tugasQuery = \App\Models\Tugas::where('departemen_id', $departemenId)
                 ->where(function ($query) use ($userId, $myGrupIds) {
                     $query->whereHas('detailTugas', function ($q) use ($userId, $myGrupIds) {
-                        $q->where('user_id', $userId)
-                          ->orWhereIn('grup_kerja_id', $myGrupIds);
+                        $q->where('user_id', $userId) ->orWhereIn('grup_kerja_id', $myGrupIds);
                     })
                     ->orWhereDoesntHave('detailTugas');
                 });
@@ -172,19 +158,12 @@ Route::middleware('auth')->group(function () {
             $tugasKelompokSaya = (clone $tugasQuery)->where('kategoritugas', 'Kelompok')->count();
             $tugasIndividuSaya = (clone $tugasQuery)->where('kategoritugas', 'Individu')->count();
 
-            $tugas = (clone $tugasQuery)
-                ->latest()
-                ->take(5)
-                ->get();
-
-            $laporans = \App\Models\Laporan::where('user_id', $userId)
-                ->latest()
-                ->take(5)
-                ->get();
+            $tugas = (clone $tugasQuery) ->latest() ->take(5) ->get();
+            $laporans = \App\Models\Laporan::where('user_id', $userId) ->latest() ->take(5) ->get();
 
             return view('staff.dashboard', compact(
-                'tugas', 'totalTugas', 'tugasSelesai', 'tugasPending', 'tugasRevisi', 
-                'tugasBerjalan', 'efisiensi', 'totalGrupSaya', 'totalLaporanSaya', 
+                'tugas', 'totalTugas', 'tugasSelesai', 'tugasPending', 'tugasRevisi',
+                'tugasBerjalan', 'efisiensi', 'totalGrupSaya', 'totalLaporanSaya',
                 'tugasKelompokSaya', 'tugasIndividuSaya', 'laporans'
             ));
         })->name('staff.dashboard');
@@ -195,10 +174,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/lampiran/{id}/update', [c_kelolaTugas::class, 'updateLampiran'])->name('lampiran.update');
         Route::delete('/lampiran/{id}/hapus', [c_kelolaTugas::class, 'hapusSubmit'])->name('lampiran.destroy');
 
-        // Kelola Jadwal Staff
         Route::get('/staff/jadwal', [\App\Http\Controllers\c_kelolaJadwal::class, 'index'])->name('staff.jadwal.index');
 
-        // Rute Laporan Staff
         Route::get('/staff/laporan', [c_laporan::class, 'index'])->name('staff.laporan.index');
         Route::post('/staff/laporan', [c_laporan::class, 'store'])->name('staff.laporan.store');
     });
