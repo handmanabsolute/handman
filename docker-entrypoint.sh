@@ -1,0 +1,62 @@
+#!/bin/sh
+set -e
+
+echo "=== Laravel Container Startup ==="
+
+# 1. Print environment info (masking passwords)
+echo "Diagnosing Environment Variables..."
+echo "DB_CONNECTION: ${DB_CONNECTION}"
+echo "DB_HOST: ${DB_HOST}"
+echo "DB_PORT: ${DB_PORT}"
+echo "DB_DATABASE: ${DB_DATABASE}"
+echo "DB_USERNAME: ${DB_USERNAME}"
+if [ -n "${DB_PASSWORD}" ]; then
+  echo "DB_PASSWORD: [SET (masked)]"
+else
+  echo "DB_PASSWORD: [NOT SET]"
+fi
+if [ -n "${DB_URL}" ]; then
+  # Mask credentials in DB_URL
+  MASKED_DB_URL=$(echo "${DB_URL}" | sed -E 's/\/\/[^:]+:[^@]+@/\/\/*****:*****@/')
+  echo "DB_URL: ${MASKED_DB_URL}"
+else
+  echo "DB_URL: [NOT SET]"
+fi
+
+# 2. Clear config/route/view cache to ensure fresh settings are loaded
+echo "Clearing configuration and application cache..."
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
+
+# 3. Test MySQL connection using PHP
+echo "Testing database connection..."
+set +e
+DB_ERROR=$(php -r "
+require 'vendor/autoload.php';
+\$app = require_once 'bootstrap/app.php';
+\$kernel = \$app->make(Illuminate\Contracts\Console\Kernel::class);
+\$kernel->bootstrap();
+try {
+    Illuminate\Support\Facades\DB::connection()->getPdo();
+    exit(0);
+} catch (\Exception \$e) {
+    echo \$e->getMessage();
+    exit(1);
+}
+" 2>&1)
+DB_STATUS=$?
+set -e
+
+if [ $DB_STATUS -eq 0 ]; then
+  echo "Database connection successful! Running migrations..."
+  php artisan migrate --force
+else
+  echo "WARNING: Database connection failed: ${DB_ERROR}"
+  echo "Skipping migrations to prevent container crash."
+fi
+
+# 4. Start the server
+echo "Starting Laravel server..."
+exec php artisan serve --host=0.0.0.0 --port=${PORT:-8080}

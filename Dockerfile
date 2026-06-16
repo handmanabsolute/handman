@@ -38,12 +38,8 @@ COPY . .
 RUN composer run-script post-autoload-dump || true
 
 # Set permissions
-RUN chmod -R 775 storage bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache && chmod +x docker-entrypoint.sh
 
 EXPOSE 8080
 
-# Start: clear config cache, then migrate, then serve
-# Config is cleared FIRST so Railway env vars are used (not cached defaults)
-CMD php artisan config:clear && \
-    php artisan migrate --force && \
-    php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
