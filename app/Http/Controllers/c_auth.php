@@ -66,7 +66,10 @@ class c_auth extends Controller
         try {
             Mail::to($user->email)->send(new SendOtpMail($otp));
         } catch (\Exception $e) {
-            Log::error('Error sending OTP mail: '.$e->getMessage());
+            Log::error('Error sending OTP mail: '.$e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'class' => get_class($e),
+            ]);
             throw ValidationException::withMessages([
                 'login_input' => ['Gagal mengirim kode OTP ke email Anda. Silakan coba beberapa saat lagi.'],
             ]);
@@ -146,7 +149,10 @@ class c_auth extends Controller
         try {
             Mail::to($user->email)->send(new SendOtpMail($otp));
         } catch (\Exception $e) {
-            Log::error('Error resending OTP mail: '.$e->getMessage());
+            Log::error('Error resending OTP mail: '.$e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'class' => get_class($e),
+            ]);
 
             return redirect()->back()->withErrors([
                 'otp_input' => 'Gagal mengirim ulang kode OTP. Silakan coba beberapa saat lagi.',

@@ -9,11 +9,17 @@
     <meta name="user-id" content="{{ auth()->id() }}">
     <meta name="user-role" content="{{ auth()->user() ? auth()->user()->nama_role : '' }}">
     <meta name="user-departemen-id" content="{{ auth()->user() ? auth()->user()->departemen_id : '' }}">
-    <meta name="reverb-key" content="{{ env('REVERB_APP_KEY') }}">
-    <meta name="reverb-host" content="{{ env('REVERB_HOST', '127.0.0.1') }}">
-    <meta name="reverb-port" content="{{ env('REVERB_PORT', '8080') }}">
-    <meta name="reverb-scheme" content="{{ env('REVERB_SCHEME', 'http') }}">
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/reverb.js'])
+    @if(config('broadcasting.default') === 'reverb')
+    <meta name="reverb-key" content="{{ config('reverb.apps.apps.0.key') }}">
+    <meta name="reverb-host" content="{{ config('reverb.apps.apps.0.options.host') }}">
+    <meta name="reverb-port" content="{{ config('reverb.apps.apps.0.options.port') }}">
+    <meta name="reverb-scheme" content="{{ config('reverb.apps.apps.0.options.scheme') }}">
+    @endif
+    @if(config('broadcasting.default') === 'reverb')
+        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/reverb.js'])
+    @else
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @endif
 </head>
 <body class="bg-gray-50 min-h-screen font-sans antialiased" x-data="{ sidebarOpen: false }">
 
