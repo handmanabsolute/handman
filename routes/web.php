@@ -63,6 +63,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/notifications/{id}/read', [\App\Http\Controllers\c_notification::class, 'read'])->name('notifications.read');
     Route::post('/notifications/read-all', [\App\Http\Controllers\c_notification::class, 'readAll'])->name('notifications.readAll');
+    Route::delete('/notifications/destroy-all', [\App\Http\Controllers\c_notification::class, 'destroyAll'])->name('notifications.destroyAll');
     Route::delete('/notifications/{id}', [\App\Http\Controllers\c_notification::class, 'destroy'])->name('notifications.destroy');
 
     Route::get('/laporan/{id}', [c_laporan::class, 'show'])->name('laporan.show');

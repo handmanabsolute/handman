@@ -68,4 +68,18 @@ class c_notification extends Controller
 
         return redirect()->back()->with('success', 'Notifikasi berhasil dihapus.');
     }
+
+    public function destroyAll(Request $request)
+    {
+        Notification::where('user_id', Auth::id())->delete();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Semua notifikasi berhasil dihapus.'
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Semua notifikasi berhasil dihapus.');
+    }
 }

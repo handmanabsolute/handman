@@ -245,4 +245,74 @@ function deleteNotification(event, id, url, csrfToken, buttonEl) {
     });
 }
 
+function deleteAllNotifications(event, url, csrfToken, buttonEl) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    const notifMenu = document.getElementById('notif-menu');
+    if (!notifMenu) return;
+
+    const items = notifMenu.querySelectorAll('.relative.group');
+    items.forEach(item => {
+        item.style.transition = 'all 0.25s ease';
+        item.style.opacity = '0';
+        item.style.transform = 'scale(0.95)';
+    });
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+            _method: 'DELETE'
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            setTimeout(() => {
+                items.forEach(item => item.remove());
+
+                const listContainer = notifMenu.querySelector('.max-h-80');
+                if (listContainer) {
+                    listContainer.innerHTML = `
+                        <div class="p-8 text-center text-gray-400 flex flex-col items-center gap-2">
+                            <i class="fa-regular fa-bell-slash text-xl text-gray-300"></i>
+                            <p class="text-xs font-medium">Tidak ada notifikasi baru.</p>
+                        </div>
+                    `;
+                }
+
+                // Hapus badge
+                const badge = document.getElementById('notif-badge');
+                const headerBadge = document.getElementById('notif-header-badge');
+                if (badge) badge.remove();
+                if (headerBadge) headerBadge.remove();
+
+                // Hapus tombol-tombol di header menu
+                const actionsContainer = notifMenu.querySelector('.notif-actions-header');
+                if (actionsContainer) actionsContainer.remove();
+            }, 250);
+        } else {
+            items.forEach(item => {
+                item.style.opacity = '1';
+                item.style.transform = 'none';
+            });
+            alert('Gagal menghapus semua notifikasi.');
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting all notifications:', error);
+        items.forEach(item => {
+            item.style.opacity = '1';
+            item.style.transform = 'none';
+        });
+        alert('Terjadi kesalahan.');
+    });
+}
+
 window.deleteNotification = deleteNotification;
+window.deleteAllNotifications = deleteAllNotifications;

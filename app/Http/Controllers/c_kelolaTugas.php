@@ -501,6 +501,18 @@ class c_kelolaTugas extends Controller
             'link_tugas.url' => 'Format link tugas tidak valid.',
         ]);
 
+        $validator->after(function ($validator) use ($request) {
+            $hasGambar = $request->hasFile('gambar_file');
+            $hasExistingGambar = $request->filled('existing_gambar');
+            $hasDokumen = $request->hasFile('nama_file');
+            $hasExistingDokumen = $request->filled('existing_dokumen');
+            $hasLink = $request->filled('link_tugas');
+
+            if (!$hasGambar && !$hasExistingGambar && !$hasDokumen && !$hasExistingDokumen && !$hasLink) {
+                $validator->errors()->add('gambar_file', 'Minimal harus mengunggah satu berkas (gambar/dokumen) atau mengisi tautan link tugas.');
+            }
+        });
+
         if ($request->hasHeader('X-Validate-Only')) {
             if ($validator->fails()) {
                 return response()->json([

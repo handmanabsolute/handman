@@ -68,14 +68,24 @@
                             <span id="notif-header-badge" class="px-1.5 py-0.5 bg-red-50 text-red-600 text-[10px] font-bold rounded-md">{{ $unreadCount }} baru</span>
                         @endif
                     </span>
-                    @if($unreadCount > 0)
-                        <form action="{{ route('notifications.readAll') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="text-[10px] text-[#3B28CC] hover:underline font-bold cursor-pointer">
-                                Tandai semua dibaca
+                    <div class="notif-actions-header flex items-center gap-1.5">
+                        @if($unreadCount > 0)
+                            <form action="{{ route('notifications.readAll') }}" method="POST" class="m-0 flex items-center">
+                                @csrf
+                                <button type="submit" class="text-[10px] text-[#3B28CC] hover:underline font-bold cursor-pointer">
+                                    Tandai semua dibaca
+                                </button>
+                            </form>
+                            @if($notifications->count() > 0)
+                                <span class="text-gray-300 text-[10px]">|</span>
+                            @endif
+                        @endif
+                        @if($notifications->count() > 0)
+                            <button type="button" onclick="deleteAllNotifications(event, '{{ route('notifications.destroyAll') }}', '{{ csrf_token() }}', this)" class="text-[10px] text-red-600 hover:underline font-bold cursor-pointer">
+                                Hapus Semua
                             </button>
-                        </form>
-                    @endif
+                        @endif
+                    </div>
                 </div>
 
                 <div class="max-h-80 overflow-y-auto divide-y divide-gray-50">

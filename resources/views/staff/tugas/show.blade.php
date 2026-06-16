@@ -293,7 +293,7 @@
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-semibold text-gray-700">Unggah Gambar (Opsional)</label>
+                                <label class="block text-xs font-semibold text-gray-700">Unggah Gambar</label>
                                 <div class="relative group border-2 border-dashed border-gray-200 hover:border-[#3B28CC] rounded-xl p-6 bg-gray-50/50 hover:bg-gray-50 transition-all text-center cursor-pointer flex flex-col items-center justify-center min-h-40">
                                     <input type="file" name="gambar_file" id="gambar_file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                                     <div id="container_preview_gambar" class="hidden absolute inset-0 bg-white rounded-xl p-4 z-20 space-y-2 justify-center flex flex-col">
@@ -313,14 +313,14 @@
                                             <i class="fa-regular fa-image text-lg"></i>
                                         </div>
                                         <p class="text-sm font-bold text-gray-800">Upload Gambar</p>
-                                        <p class="text-xs text-gray-400">Supports JPG, PNG, WebP (Max 10MB)</p>
+                                        <p class="text-xs text-gray-400">JPG, PNG, WebP (Max 10MB)</p>
                                     </div>
                                 </div>
                                 <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-gambar_file"></p>
                             </div>
 
                             <div class="space-y-1.5">
-                                <label class="block text-xs font-semibold text-gray-700">Unggah Dokumen (Opsional)</label>
+                                <label class="block text-xs font-semibold text-gray-700">Unggah Dokumen</label>
                                 <div class="relative group border-2 border-dashed border-gray-200 hover:border-[#3B28CC] rounded-xl p-6 bg-gray-50/50 hover:bg-gray-50 transition-all text-center cursor-pointer flex flex-col items-center justify-center min-h-40">
                                     <input type="file" name="nama_file" id="nama_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                                     <div id="container_preview_dokumen" class="hidden absolute inset-0 bg-white rounded-xl p-4 z-20 space-y-2 justify-center flex flex-col">
@@ -340,7 +340,7 @@
                                             <i class="fa-regular fa-file-lines text-lg"></i>
                                         </div>
                                         <p class="text-sm font-bold text-gray-800">Upload Dokumen</p>
-                                        <p class="text-xs text-gray-400">Supports PDF, DOCX, XLSX, PPTX, TXT (Max 20MB)</p>
+                                        <p class="text-xs text-gray-400">PDF, DOCX, XLSX, PPTX, TXT (Max 20MB)</p>
                                     </div>
                                 </div>
                                 <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-nama_file"></p>
@@ -387,6 +387,8 @@
         </div>
     </div>
 </div>
+
+<x-confirm-modal id="modal-validation-warning" title="Pengisian Berkas Kurang" message="Minimal harus mengunggah satu berkas (gambar/dokumen) atau mengisi tautan link tugas." action="closeModal('modal-validation-warning'); // executeGlobalAjaxSubmit" type="amber" />
 
 <script>
     function initFormSubmit() {
@@ -596,6 +598,44 @@
                 updateSubmitButtonState();
             });
         }
+
+        // Clear minimum upload validation error when any input has value
+        function clearMinUploadError() {
+            const errorEl = document.getElementById('error-gambar_file');
+            if (errorEl && errorEl.textContent.includes('Minimal')) {
+                errorEl.classList.add('hidden');
+                errorEl.textContent = '';
+            }
+        }
+
+        if (gambarFile) {
+            gambarFile.addEventListener('change', clearMinUploadError);
+        }
+        if (namaFile) {
+            namaFile.addEventListener('change', clearMinUploadError);
+        }
+        const linkTugasInput = document.getElementById('link_tugas');
+        if (linkTugasInput) {
+            linkTugasInput.addEventListener('input', clearMinUploadError);
+        }
+
+        formSubmitTugas.addEventListener('submit', function(e) {
+            const hasGambar = (gambarFile && gambarFile.files.length > 0) || (existingGambarInput && existingGambarInput.value !== '');
+            const hasDokumen = (namaFile && namaFile.files.length > 0) || (existingDokumenInput && existingDokumenInput.value !== '');
+            const linkInput = document.getElementById('link_tugas');
+            const hasLink = linkInput && linkInput.value.trim() !== '';
+
+            if (!hasGambar && !hasDokumen && !hasLink) {
+                e.preventDefault();
+                e.stopPropagation();
+                const errorEl = document.getElementById('error-gambar_file');
+                if (errorEl) {
+                    errorEl.textContent = "Minimal harus mengunggah satu berkas (gambar/dokumen) atau mengisi tautan link tugas.";
+                    errorEl.classList.remove('hidden');
+                }
+                openModal('modal-validation-warning');
+            }
+        });
 
         initRealTimeValidation('form-submit-tugas');
     }

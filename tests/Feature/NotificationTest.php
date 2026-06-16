@@ -47,3 +47,44 @@ test('user can delete their notification successfully', function () {
         'id' => $notification->id,
     ]);
 });
+
+test('user can delete all their notifications successfully', function () {
+    $user = User::create([
+        'nama_lengkap'  => 'Staff One',
+        'email'         => 'staff1@example.com',
+        'password'      => Hash::make('Password123!'),
+        'no_telp'       => '081234567890',
+        'jenis_kelamin' => 'L',
+        'tanggal_lahir' => '1995-05-05',
+        'nama_role'     => 'staff',
+        'is_active'     => 1,
+    ]);
+
+    $notif1 = Notification::create([
+        'id'        => (string) Str::ulid(),
+        'user_id'   => $user->id,
+        'title'     => 'Tugas Baru 1',
+        'message'   => 'Anda menerima tugas baru 1',
+        'type'      => 'tugas_baru',
+        'is_read'   => false,
+    ]);
+
+    $notif2 = Notification::create([
+        'id'        => (string) Str::ulid(),
+        'user_id'   => $user->id,
+        'title'     => 'Tugas Baru 2',
+        'message'   => 'Anda menerima tugas baru 2',
+        'type'      => 'tugas_baru',
+        'is_read'   => true,
+    ]);
+
+    $this->assertDatabaseHas('notifications', ['id' => $notif1->id]);
+    $this->assertDatabaseHas('notifications', ['id' => $notif2->id]);
+
+    $response = $this->actingAs($user)
+        ->delete(route('notifications.destroyAll'));
+
+    $response->assertRedirect();
+    
+    $this->assertDatabaseMissing('notifications', ['user_id' => $user->id]);
+});
