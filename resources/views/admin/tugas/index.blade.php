@@ -64,9 +64,9 @@
 
     <form method="GET" action="{{ route('admin.tugas.index') }}" id="filter-form">
         <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
-                <!-- Departemen -->
-                <div class="w-full">
+            <div class="flex flex-col sm:flex-row gap-3 items-end">
+
+                <div class="w-full sm:flex-1">
                     <label class="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Departemen</label>
                     <select name="departemen_id" id="filter-departemen" class="w-full py-2 px-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all appearance-none cursor-pointer">
                         <option value="">Semua Departemen</option>
@@ -78,46 +78,12 @@
                     </select>
                 </div>
 
-                <!-- Status -->
-                <div class="w-full">
-                    <label class="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Status</label>
-                    <select name="status" id="filter-status" class="w-full py-2 px-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all appearance-none cursor-pointer">
-                        <option value="">Semua Status</option>
-                        <option value="Belum Dikerjakan" {{ request('status') === 'Belum Dikerjakan' ? 'selected' : '' }}>Belum Dikerjakan</option>
-                        <option value="Menunggu Persetujuan" {{ request('status') === 'Menunggu Persetujuan' ? 'selected' : '' }}>Menunggu Persetujuan</option>
-                        <option value="Revisi" {{ request('status') === 'Revisi' ? 'selected' : '' }}>Revisi</option>
-                        <option value="Selesai" {{ request('status') === 'Selesai' ? 'selected' : '' }}>Selesai</option>
-                    </select>
-                </div>
-
-                <!-- Prioritas -->
-                <div class="w-full">
-                    <label class="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Prioritas</label>
-                    <select name="prioritas" id="filter-prioritas" class="w-full py-2 px-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all appearance-none cursor-pointer">
-                        <option value="">Semua Prioritas</option>
-                        <option value="Rendah" {{ request('prioritas') === 'Rendah' ? 'selected' : '' }}>Rendah</option>
-                        <option value="Sedang" {{ request('prioritas') === 'Sedang' ? 'selected' : '' }}>Sedang</option>
-                        <option value="Tinggi" {{ request('prioritas') === 'Tinggi' ? 'selected' : '' }}>Tinggi</option>
-                    </select>
-                </div>
-
-                <!-- Kategori -->
-                <div class="w-full">
-                    <label class="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Kategori</label>
-                    <select name="kategori" id="filter-kategori" class="w-full py-2 px-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all appearance-none cursor-pointer">
-                        <option value="">Semua Kategori</option>
-                        <option value="Individu" {{ request('kategori') === 'Individu' ? 'selected' : '' }}>Individu</option>
-                        <option value="Kelompok" {{ request('kategori') === 'Kelompok' ? 'selected' : '' }}>Departemen</option>
-                    </select>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex gap-2 w-full justify-end">
-                    <button type="submit" class="px-4 py-2 bg-[#3B28CC] text-white text-sm font-semibold rounded-xl hover:bg-[#2c1fa3] transition-colors flex items-center gap-2 cursor-pointer w-full justify-center">
+                <div class="flex gap-2 w-full sm:w-auto shrink-0 justify-end">
+                    <button type="submit" class="px-4 py-2 bg-[#3B28CC] text-white text-sm font-semibold rounded-xl hover:bg-[#2c1fa3] transition-colors flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center">
                         <i class="fa-solid fa-filter text-xs"></i> Filter
                     </button>
-                    @if(request()->anyFilled(['departemen_id', 'status', 'prioritas', 'kategori']))
-                        <a href="{{ route('admin.tugas.index') }}" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm font-semibold rounded-xl hover:bg-gray-50 transition-colors flex items-center gap-2 w-full justify-center">
+                    @if(request()->filled('departemen_id'))
+                        <a href="{{ route('admin.tugas.index') }}" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm font-semibold rounded-xl hover:bg-gray-50 transition-colors flex items-center gap-2 w-full sm:w-auto justify-center">
                             <i class="fa-solid fa-xmark text-xs"></i> Reset
                         </a>
                     @endif
@@ -298,7 +264,6 @@
 </div>
 
 <script>
-    // Auto-submit form ketika dropdown filter berubah
     ['filter-departemen', 'filter-status', 'filter-prioritas', 'filter-kategori'].forEach(function(id) {
         const el = document.getElementById(id);
         if (el) {
@@ -308,7 +273,6 @@
         }
     });
 
-    // Debounce pencarian teks
     let searchTimer;
     const searchInput = document.getElementById('filter-search');
     if (searchInput) {
