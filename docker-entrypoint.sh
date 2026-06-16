@@ -5,6 +5,7 @@ echo "=== Laravel Container Startup ==="
 
 # 1. Print environment info (masking passwords)
 echo "Diagnosing Environment Variables..."
+echo "APP_URL: ${APP_URL}"
 echo "DB_CONNECTION: ${DB_CONNECTION}"
 echo "DB_HOST: ${DB_HOST}"
 echo "DB_PORT: ${DB_PORT}"
@@ -22,6 +23,10 @@ if [ -n "${DB_URL}" ]; then
 else
   echo "DB_URL: [NOT SET]"
 fi
+
+# 1.1 Diagnosing compiled assets
+echo "Checking compiled assets in public/build..."
+ls -R public/build || echo "public/build directory is missing!"
 
 # 2. Clear config/route/view cache to ensure fresh settings are loaded
 echo "Clearing configuration and application cache..."
