@@ -52,7 +52,7 @@
 
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
             <div class="space-y-1">
-                <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Efisiensi Kerja</span>
+                <span class="text-xs font-medium text-gray-400 uppercase tracking-wider">Presentase Kinerja</span>
                 <h3 class="text-2xl font-bold
                     {{ $efisiensi >= 75 ? 'text-green-600' : ($efisiensi >= 50 ? 'text-amber-600' : 'text-rose-600') }}">
                     {{ $efisiensi }}%

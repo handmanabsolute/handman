@@ -115,10 +115,10 @@
                 <div class="p-6 space-y-4">
                     <div class="space-y-1.5">
                         <label class="text-xs font-bold text-gray-600 uppercase tracking-wider block">
-                            Pertanyaan
+                            Laporan
                         </label>
                         <textarea name="pertanyaan" rows="6" required
-                                  placeholder="Tuliskan pertanyaan Anda..."
+                                  placeholder="Tuliskan laporan Anda..."
                                   class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all resize-none"></textarea>
                         <p class="text-xs text-red-600 error-msg hidden" id="error-pertanyaan"></p>
                     </div>

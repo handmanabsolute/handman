@@ -86,7 +86,7 @@
             <div class="space-y-4">
                 <div class="space-y-2">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Pertanyaan</span>
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Laporan</span>
                     </div>
                     <div class="text-sm text-gray-700 leading-relaxed bg-gray-50/60 p-5 rounded-2xl border border-gray-100 font-medium whitespace-pre-line">
                         {{ $laporan->isi }}
@@ -111,7 +111,7 @@
                         <div class="space-y-4">
                             <div>
                                 <h3 class="text-base font-bold text-gray-900">Kirim Respon Tanggapan</h3>
-                                <p class="text-xs text-gray-500 mt-0.5">Kirim tanggapan resmi untuk merespon pertanyaan pengaduan ini.</p>
+                                <p class="text-xs text-gray-500 mt-0.5">Kirim tanggapan resmi untuk merespon laporan pengaduan ini.</p>
                             </div>
 
                             <form method="POST" action="{{ route('admin.laporan.respon', $laporan->id) }}" id="form-respon">
