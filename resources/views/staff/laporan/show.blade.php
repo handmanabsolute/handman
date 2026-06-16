@@ -71,12 +71,12 @@
                 
                 <div class="space-y-2">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Pertanyaan</span>
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider block">Laporan</span>
                         @if(!$laporan->tanggapan)
                             <button type="button" onclick="openEditModal({{ json_encode($laporan) }})"
                                     class="text-[#3B28CC] hover:underline text-xs font-bold transition-all flex items-center gap-1 cursor-pointer">
                                 <i class="fa-solid fa-pen text-xs"></i>
-                                Edit Pertanyaan
+                                Edit Laporan
                             </button>
                         @endif
                     </div>
@@ -109,15 +109,14 @@
 
 </div>
 
-<!-- Modal Edit Pertanyaan -->
 <div id="modal-edit" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
     <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-xs" onclick="closeEditModal()"></div>
     <div class="absolute inset-0 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg border border-gray-100 overflow-hidden">
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                 <div>
-                    <h3 class="text-base font-bold text-gray-900">Edit Pertanyaan</h3>
-                    <p class="text-xs text-gray-400 mt-0.5">Ubah pertanyaan laporan sebelum dijawab.</p>
+                    <h3 class="text-base font-bold text-gray-900">Edit Laporan</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">Ubah laporan sebelum dijawab.</p>
                 </div>
                 <button type="button" onclick="closeEditModal()"
                         class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer">
@@ -131,10 +130,10 @@
                 <div class="p-6 space-y-4">
                     <div class="space-y-1.5">
                         <label class="text-xs font-bold text-gray-600 uppercase tracking-wider block">
-                            Pertanyaan
+                            Laporan
                         </label>
                         <textarea name="pertanyaan" id="edit-pertanyaan" rows="6" required
-                                  placeholder="Tuliskan pertanyaan Anda..."
+                                  placeholder="Tuliskan laporan Anda..."
                                   class="w-full px-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC] transition-all resize-none"></textarea>
                         <p class="text-xs text-red-600 error-msg hidden" id="error-pertanyaan"></p>
                     </div>
