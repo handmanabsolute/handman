@@ -62,6 +62,10 @@ else
   echo "Skipping migrations to prevent container crash."
 fi
 
-# 4. Start the server
+# 4. Start queue worker in background
+echo "Starting Laravel queue worker..."
+php artisan queue:work --sleep=3 --tries=3 --timeout=60 &
+
+# 5. Start the server
 echo "Starting Laravel server..."
 exec php artisan serve --host=0.0.0.0 --port=${PORT:-8080}

@@ -64,7 +64,7 @@ class c_auth extends Controller
         $user->save();
 
         try {
-            Mail::to($user->email)->send(new SendOtpMail($otp));
+            Mail::to($user->email)->queue(new SendOtpMail($otp));
         } catch (\Exception $e) {
             Log::error('Error sending OTP mail: '.$e->getMessage());
             throw ValidationException::withMessages([
@@ -144,7 +144,7 @@ class c_auth extends Controller
         $user->save();
 
         try {
-            Mail::to($user->email)->send(new SendOtpMail($otp));
+            Mail::to($user->email)->queue(new SendOtpMail($otp));
         } catch (\Exception $e) {
             Log::error('Error resending OTP mail: '.$e->getMessage());
 
