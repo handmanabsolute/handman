@@ -25,10 +25,10 @@ fi
 
 # 2. Clear config/route/view cache to ensure fresh settings are loaded
 echo "Clearing configuration and application cache..."
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
-php artisan cache:clear
+php artisan config:clear || true
+php artisan route:clear || true
+php artisan view:clear || true
+php artisan cache:clear || true
 
 # 3. Test MySQL connection using PHP
 echo "Testing database connection..."
