@@ -36,6 +36,8 @@ const echoInstance = new Echo({
     enabledTransports: ['ws', 'wss'],
 });
 
+window.Echo = echoInstance;
+
 if (currentUserId) {
     const updateAppBody = () => {
         console.log('Updating application body...');
