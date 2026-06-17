@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -29,67 +28,6 @@ class c_auth extends Controller
             'staff' => redirect()->route('staff.dashboard'),
             default => redirect('/dashboard'),
         };
-    }
-
-    /**
-     * Send email via Resend API directly (bypasses Laravel MailManager).
-     * Falls back to Laravel Mail if the \Resend class is available.
-     */
-    private function sendOtpEmail(string $email, string $otpCode): void
-    {
-        try {
-            // Try Laravel Mail first (requires resend/resend-php package)
-            Mail::to($email)->send(new SendOtpMail($otpCode));
-        } catch (\Error $e) {
-            // "Class 'Resend' not found" - fall back to direct Resend API
-            if (str_contains($e->getMessage(), 'Resend')) {
-                $this->sendViaResendApi($email, 'Kode Verifikasi OTP Anda - HandMan', 'emails.otp', ['otpCode' => $otpCode]);
-            } else {
-                throw $e;
-            }
-        }
-    }
-
-    /**
-     * Call Resend API directly using HTTP (no package required).
-     */
-    private function sendViaResendApi(string $to, string $subject, string $view, array $data): void
-    {
-        $apiKey = env('RESEND_API_KEY');
-        $fromAddress = env('MAIL_FROM_ADDRESS', 'noreply@example.com');
-        $fromName = env('MAIL_FROM_NAME', 'Handman');
-
-        $html = View::make($view, $data)->render();
-
-        $payload = json_encode([
-            'from' => "{$fromName} <{$fromAddress}>",
-            'to' => [$to],
-            'subject' => $subject,
-            'html' => $html,
-        ]);
-
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'header' => "Authorization: Bearer {$apiKey}\r\nContent-Type: application/json\r\n",
-                'content' => $payload,
-                'timeout' => 30,
-                'ignore_errors' => true,
-            ],
-        ]);
-
-        $response = @file_get_contents('https://api.resend.com/emails', false, $context);
-        if ($response === false) {
-            throw new \Exception('Gagal mengirim email via Resend API');
-        }
-
-        $decoded = json_decode($response, true);
-        if (isset($decoded['error'])) {
-            Log::error('Resend API error', ['response' => $decoded]);
-            throw new \Exception('Resend API: '.($decoded['error']['message'] ?? 'Unknown error'));
-        }
-
-        Log::info('OTP email sent via Resend API', ['to' => $to]);
     }
 
     public function showLogin()
@@ -126,7 +64,7 @@ class c_auth extends Controller
         $user->save();
 
         try {
-            $this->sendOtpEmail($user->email, $otp);
+            Mail::to($user->email)->send(new SendOtpMail($otp));
         } catch (\Exception $e) {
             Log::error('Error sending OTP mail: '.$e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
@@ -209,7 +147,7 @@ class c_auth extends Controller
         $user->save();
 
         try {
-            $this->sendOtpEmail($user->email, $otp);
+            Mail::to($user->email)->send(new SendOtpMail($otp));
         } catch (\Exception $e) {
             Log::error('Error resending OTP mail: '.$e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
