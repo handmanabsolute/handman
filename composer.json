@@ -13,7 +13,10 @@
         "barryvdh/laravel-dompdf": "^3.1",
         "laravel/framework": "^13.8",
         "laravel/reverb": "^1.0",
-        "laravel/tinker": "^3.0"
+        "laravel/tinker": "^3.0",
+        "symfony/http-client": "^7.2",
+        "symfony/mailgun-mailer": "^7.2",
+        "symfony/resend-mailer": "^7.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
