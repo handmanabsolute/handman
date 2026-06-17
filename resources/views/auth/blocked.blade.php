@@ -23,10 +23,13 @@
         </div>
 
         <div class="pt-2">
-            <a href="{{ route('login') }}" class="inline-flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 rounded-xl shadow-sm transition-colors gap-2">
-                <i class="fa-solid fa-arrow-left text-xs"></i>
-                Kembali ke Login
-            </a>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="inline-flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 rounded-xl shadow-sm transition-colors gap-2 cursor-pointer">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                    Kembali ke Login
+                </button>
+            </form>
         </div>
     </div>
 </div>
