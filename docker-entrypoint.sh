@@ -34,6 +34,11 @@ fi
 echo "Checking compiled assets in public/build..."
 ls -R public/build || echo "public/build directory is missing!"
 
+# 1.2 Ensure all Composer packages are installed (fixes stale Docker cache)
+echo "Ensuring Composer packages are installed..."
+composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts || true
+composer dump-autoload --no-dev --optimize || true
+
 # 2. Clear config/route/view cache to ensure fresh settings are loaded
 echo "Clearing configuration and application cache..."
 php artisan config:clear || true
