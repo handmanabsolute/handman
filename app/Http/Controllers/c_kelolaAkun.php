@@ -112,7 +112,11 @@ class c_kelolaAkun extends Controller
             'alamat' => $request->alamat,
         ]);
 
-        Mail::to($user->email)->send(new RandomPassword($user, $randomPassword));
+        try {
+            Mail::to($user->email)->send(new RandomPassword($user, $randomPassword));
+        } catch (\Exception $e) {
+            \Log::warning('Gagal kirim email password random: ' . $e->getMessage());
+        }
 
         session()->flash('success', 'User berhasil ditambahkan.');
 
