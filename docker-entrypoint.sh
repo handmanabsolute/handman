@@ -3,7 +3,13 @@ set -e
 
 echo "=== Laravel Container Startup ==="
 
-# 1. Print environment info (masking passwords)
+# 1. Resolve RAILWAY_PUBLIC_DOMAIN if present in APP_URL
+if [ -n "${RAILWAY_PUBLIC_DOMAIN}" ]; then
+  APP_URL=$(echo "${APP_URL}" | sed "s/\${RAILWAY_PUBLIC_DOMAIN}/${RAILWAY_PUBLIC_DOMAIN}/g" | sed "s/\$RAILWAY_PUBLIC_DOMAIN/${RAILWAY_PUBLIC_DOMAIN}/g")
+  echo "APP_URL resolved to: ${APP_URL}"
+fi
+
+# 2. Print environment info (masking passwords)
 echo "Diagnosing Environment Variables..."
 echo "APP_URL: ${APP_URL}"
 echo "DB_CONNECTION: ${DB_CONNECTION}"
