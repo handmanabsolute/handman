@@ -22,7 +22,8 @@ WORKDIR /app
 
 # Copy and install PHP dependencies
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts && \
+    composer dump-autoload --no-dev --optimize
 
 # Copy and install Node dependencies + build assets
 COPY package.json package-lock.json ./
