@@ -319,6 +319,10 @@ class c_kelolaTugas extends Controller
 
         $validator->validate();
 
+        // Track old status for Selesai → Belum Dikerjakan reset
+        $oldStatus = $tugas->status_tugas;
+        $newStatus = $request->status_tugas;
+
         $tugas->update($request->only([
             'nama_tugas', 'deskripsi', 'tanggal_tugas', 'deadline_tugas', 'prioritas', 'status_tugas', 'kategoritugas', 'catatan_revisi',
         ]));
@@ -330,6 +334,50 @@ class c_kelolaTugas extends Controller
                 'grup_kerja_id' => $request->kategoritugas === 'Kelompok' ? $request->grup_kerja_id : null,
             ]
         );
+
+        // If manager resets a completed task back to not started, clear staff submission
+        if ($oldStatus === 'Selesai' && $newStatus === 'Belum Dikerjakan') {
+            $lampiran = $tugas->lampirans()->first();
+            if ($lampiran) {
+                // Delete submission files (pengumpulan folder)
+                if ($lampiran->gambar_file && str_starts_with($lampiran->gambar_file, 'pengumpulan/')) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($lampiran->gambar_file);
+                }
+                if ($lampiran->nama_file && str_starts_with($lampiran->nama_file, 'pengumpulan/')) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($lampiran->nama_file);
+                }
+                // Only delete lampiran if it was a staff submission (not manager's original attachment)
+                if ($lampiran->link_tugas === null && $lampiran->gambar_file && str_starts_with($lampiran->gambar_file, 'pengumpulan/')) {
+                    $lampiran->delete();
+                } elseif ($lampiran->link_tugas === null && $lampiran->nama_file && str_starts_with($lampiran->nama_file, 'pengumpulan/')) {
+                    $lampiran->delete();
+                }
+            }
+
+            // Notify assigned staff
+            if ($tugas->kategoritugas === 'Individu' && $tugas->detailTugas && $tugas->detailTugas->user_id) {
+                Notification::create([
+                    'user_id' => $tugas->detailTugas->user_id,
+                    'title' => 'Tugas Dibuka Kembali',
+                    'message' => 'Tugas "' . $tugas->nama_tugas . '" telah dibuka kembali oleh Manager. Silakan kerjakan ulang.',
+                    'type' => 'tugas_baru',
+                    'related_id' => $tugas->id,
+                ]);
+            } elseif ($tugas->kategoritugas === 'Kelompok' && $tugas->detailTugas && $tugas->detailTugas->grup_kerja_id) {
+                $anggotaIds = \DB::table('detail_grups')
+                    ->where('grup_kerja_id', $tugas->detailTugas->grup_kerja_id)
+                    ->pluck('user_id');
+                foreach ($anggotaIds as $uid) {
+                    Notification::create([
+                        'user_id' => $uid,
+                        'title' => 'Tugas Kelompok Dibuka Kembali',
+                        'message' => 'Tugas kelompok "' . $tugas->nama_tugas . '" telah dibuka kembali oleh Manager.',
+                        'type' => 'tugas_baru',
+                        'related_id' => $tugas->id,
+                    ]);
+                }
+            }
+        }
 
         try {
             event(new \App\Events\RealtimeTugasEvent(
