@@ -7,7 +7,7 @@
 
     {{-- SEO Meta Tags --}}
     <meta name="description" content="Handman adalah sistem manajemen tugas kantor yang membantu tim mengelola tugas, jadwal, dan laporan secara efisien. Kelola tugas, pantau progres, dan tingkatkan produktivitas tim Anda.">
-    <meta name="keywords" content="handman, sistem manajemen tugas, task management, manajemen tugas kantor, kelola tugas, jadwal kerja, laporan tugas, produktivitas tim, project management, kantor">
+    <meta name="keywords" content="handman rolas, sistem manajemen tugas, task management, manajemen tugas kantor, kelola tugas, jadwal kerja, laporan tugas, produktivitas tim, project management, kantor">
     <meta name="author" content="Handman">
     <meta name="robots" content="index, follow">
 
