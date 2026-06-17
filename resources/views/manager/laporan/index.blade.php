@@ -82,12 +82,29 @@
                             <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
                             Lihat Detail
                         </a>
+
+                        <button type="button" onclick="openModal('modal-hapus-{{ $laporan->id }}')"
+                                class="bg-white border border-red-200 text-red-600 hover:text-white hover:bg-red-600 px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                            Hapus
+                        </button>
                     </div>
 
                 </div>
             </div>
             @endforeach
         </div>
+
+        @foreach($laporans as $laporan)
+            @include('components.confirm-modal', [
+                'id' => 'modal-hapus-' . $laporan->id,
+                'title' => 'Hapus Laporan',
+                'message' => 'Apakah Anda yakin ingin menghapus laporan ini? Tindakan ini tidak dapat dibatalkan.',
+                'action' => route('manager.laporan.destroy', $laporan->id),
+                'method' => 'DELETE',
+                'type' => 'danger'
+            ])
+        @endforeach
     @endif
 
 </div>

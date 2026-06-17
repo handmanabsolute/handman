@@ -212,4 +212,31 @@ class c_laporan extends Controller
 
         return view($view, compact('laporan'));
     }
+
+    public function destroy(string $id)
+    {
+        $laporan = Laporan::findOrFail($id);
+        $user = auth()->user();
+
+        // Only the owner (manager/staff) can delete their own report
+        if ($laporan->user_id !== $user->id) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $judul = $laporan->judul;
+        $laporan->delete();
+
+        try {
+            event(new \App\Events\RealtimeLaporanEvent(
+                'deleted',
+                'Laporan Dihapus',
+                'Laporan "' . $judul . '" telah dihapus oleh ' . $user->nama_lengkap . '.',
+                $user->id,
+                $id
+            ));
+        } catch (\Throwable $e) {
+        }
+
+        return back()->with('success', 'Laporan berhasil dihapus.');
+    }
 }

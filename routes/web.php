@@ -101,6 +101,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/laporan', [c_laporan::class, 'index'])->name('manager.laporan.index');
         Route::post('/laporan', [c_laporan::class, 'store'])->name('manager.laporan.store');
+        Route::delete('/laporan/{id}', [c_laporan::class, 'destroy'])->name('manager.laporan.destroy');
     });
 
     Route::middleware('role:staff')->group(function () {
@@ -116,5 +117,6 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/staff/laporan', [c_laporan::class, 'index'])->name('staff.laporan.index');
         Route::post('/staff/laporan', [c_laporan::class, 'store'])->name('staff.laporan.store');
+        Route::delete('/staff/laporan/{id}', [c_laporan::class, 'destroy'])->name('staff.laporan.destroy');
     });
 });
