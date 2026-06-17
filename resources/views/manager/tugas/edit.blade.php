@@ -74,7 +74,9 @@
             <div class="space-y-1.5">
                 <label class="text-sm font-semibold text-gray-700">Status Tugas</label>
                 <select name="status_tugas" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3B28CC]/20 focus:border-[#3B28CC]" required>
-                    <option value="Belum Selesai" {{ old('status_tugas', $tugas->status_tugas) == 'Belum Selesai' ? 'selected' : '' }}>Belum Selesai</option>
+                    <option value="Belum Dikerjakan" {{ old('status_tugas', $tugas->status_tugas) == 'Belum Dikerjakan' ? 'selected' : '' }}>Belum Dikerjakan</option>
+                    <option value="Revisi" {{ old('status_tugas', $tugas->status_tugas) == 'Revisi' ? 'selected' : '' }}>Revisi</option>
+                    <option value="Menunggu Persetujuan" {{ old('status_tugas', $tugas->status_tugas) == 'Menunggu Persetujuan' ? 'selected' : '' }}>Menunggu Persetujuan</option>
                     <option value="Selesai" {{ old('status_tugas', $tugas->status_tugas) == 'Selesai' ? 'selected' : '' }}>Selesai</option>
                 </select>
                 <p class="text-xs text-red-600 error-msg hidden mt-1" id="error-status_tugas"></p>

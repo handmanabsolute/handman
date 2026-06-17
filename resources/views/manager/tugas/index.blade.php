@@ -176,7 +176,7 @@
                         };
                     @endphp
                     <span class="shrink-0 inline-flex items-center px-2 py-0.5 text-[10px] font-bold rounded-md {{ $statusColor }}">
-                        {{ $t->status_tugas ?? 'Belum Selesai' }}
+                        {{ $t->status_tugas ?? 'Belum Dikerjakan' }}
                     </span>
                 </div>
 
