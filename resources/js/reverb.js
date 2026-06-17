@@ -19,22 +19,40 @@ const currentUserId = cleanMeta('user-id');
 const currentUserRole = cleanMeta('user-role');
 const currentUserDeptId = cleanMeta('user-departemen-id');
 
-const reverbKey = cleanMeta('reverb-key');
-const reverbHost = cleanMeta('reverb-host') || window.location.hostname;
-const reverbPort = cleanMeta('reverb-port') || 8080;
-const reverbScheme = cleanMeta('reverb-scheme') || 'http';
+// Detect broadcaster: Pusher or Reverb
+const pusherKey = cleanMeta('pusher-key');
+const pusherCluster = cleanMeta('pusher-cluster') || 'ap1';
+const pusherScheme = cleanMeta('pusher-scheme') || 'https';
 
-console.log('Connecting to Reverb:', { reverbKey, reverbHost, reverbPort, reverbScheme });
+let echoInstance;
 
-const echoInstance = new Echo({
-    broadcaster: 'reverb',
-    key: reverbKey,
-    wsHost: reverbHost,
-    wsPort: reverbPort,
-    wssPort: reverbPort,
-    forceTLS: reverbScheme === 'https',
-    enabledTransports: ['ws', 'wss'],
-});
+if (pusherKey) {
+    // Pusher mode
+    console.log('Connecting to Pusher:', { pusherKey, pusherCluster });
+    echoInstance = new Echo({
+        broadcaster: 'pusher',
+        key: pusherKey,
+        cluster: pusherCluster,
+        forceTLS: pusherScheme === 'https',
+    });
+} else {
+    // Reverb mode
+    const reverbKey = cleanMeta('reverb-key');
+    const reverbHost = cleanMeta('reverb-host') || window.location.hostname;
+    const reverbPort = cleanMeta('reverb-port') || 8080;
+    const reverbScheme = cleanMeta('reverb-scheme') || 'http';
+
+    console.log('Connecting to Reverb:', { reverbKey, reverbHost, reverbPort, reverbScheme });
+    echoInstance = new Echo({
+        broadcaster: 'reverb',
+        key: reverbKey,
+        wsHost: reverbHost,
+        wsPort: reverbPort,
+        wssPort: reverbPort,
+        forceTLS: reverbScheme === 'https',
+        enabledTransports: ['ws', 'wss'],
+    });
+}
 
 window.Echo = echoInstance;
 

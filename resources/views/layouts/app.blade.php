@@ -15,7 +15,12 @@
     <meta name="reverb-port" content="{{ config('reverb.apps.apps.0.options.port') }}">
     <meta name="reverb-scheme" content="{{ config('reverb.apps.apps.0.options.scheme') }}">
     @endif
-    @if(config('broadcasting.default') === 'reverb')
+    @if(config('broadcasting.default') === 'pusher')
+    <meta name="pusher-key" content="{{ config('broadcasting.connections.pusher.key') }}">
+    <meta name="pusher-cluster" content="{{ config('broadcasting.connections.pusher.options.cluster') }}">
+    <meta name="pusher-scheme" content="{{ config('broadcasting.connections.pusher.options.scheme', 'https') }}">
+    @endif
+    @if(config('broadcasting.default') === 'reverb' || config('broadcasting.default') === 'pusher')
         @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/reverb.js'])
     @else
         @vite(['resources/css/app.css', 'resources/js/app.js'])
