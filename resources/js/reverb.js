@@ -99,30 +99,32 @@ if (currentUserId) {
         .then(html => {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
-            const newNotifBtn = doc.getElementById('notif-menu-btn');
-            const newNotifMenu = doc.getElementById('notif-menu');
-            const currentNotifBtn = document.getElementById('notif-menu-btn');
-            const currentNotifMenu = document.getElementById('notif-menu');
-            
-            if (newNotifBtn && currentNotifBtn) {
-                currentNotifBtn.outerHTML = newNotifBtn.outerHTML;
-            }
-            if (newNotifMenu && currentNotifMenu) {
-                const wasHidden = currentNotifMenu.classList.contains('hidden');
-                currentNotifMenu.outerHTML = newNotifMenu.outerHTML;
-                const freshNotifMenu = document.getElementById('notif-menu');
-                if (freshNotifMenu) {
-                    if (wasHidden) {
-                        freshNotifMenu.classList.add('hidden');
-                        freshNotifMenu.style.opacity = '0';
-                        freshNotifMenu.style.transform = 'scale(0.95)';
-                    } else {
-                        freshNotifMenu.classList.remove('hidden');
-                        freshNotifMenu.style.opacity = '1';
-                        freshNotifMenu.style.transform = 'scale(1)';
-                    }
+
+            // Update badge on button
+            const newBadge = doc.getElementById('notif-badge');
+            const currentBadge = document.getElementById('notif-badge');
+            const currentBtn = document.getElementById('notif-menu-btn');
+
+            if (newBadge && currentBtn) {
+                // New badge exists, update or create
+                if (currentBadge) {
+                    currentBadge.textContent = newBadge.textContent;
+                } else {
+                    const badgeClone = newBadge.cloneNode(true);
+                    currentBtn.appendChild(badgeClone);
                 }
+            } else if (!newBadge && currentBadge) {
+                // No more unread, remove badge
+                currentBadge.remove();
             }
+
+            // Update menu inner content only (don't replace the menu element)
+            const newMenu = doc.getElementById('notif-menu');
+            const currentMenu = document.getElementById('notif-menu');
+            if (newMenu && currentMenu) {
+                currentMenu.innerHTML = newMenu.innerHTML;
+            }
+
             console.log('Notifications updated successfully');
         })
         .catch(error => {
