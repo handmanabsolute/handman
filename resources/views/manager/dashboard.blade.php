@@ -10,7 +10,6 @@
             <h1 class="text-2xl font-bold text-gray-900">Dashboard Utama</h1>
             <p class="text-sm text-gray-500 mt-0.5">Selamat datang kembali, <span class="font-semibold text-gray-700">{{ Auth::user()->nama_lengkap }}</span>. Berikut ringkasan departemen <span class="font-bold text-[#3B28CC]">{{ Auth::user()->departemen->nama_departemen ?? 'Umum' }}</span> hari ini.</p>
         </div>
-        <span class="text-xs text-gray-400 font-medium">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</span>
     </div>
 
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
