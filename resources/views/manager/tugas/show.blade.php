@@ -326,23 +326,25 @@
 </div>
 
 <script>
-    const btnBukaRevisi = document.getElementById('btn_buka_revisi');
-    const btnBatalRevisi = document.getElementById('btn_batal_revisi');
-    const formRevisi = document.getElementById('form_revisi');
+    (function() {
+        const btnBukaRevisi = document.getElementById('btn_buka_revisi');
+        const btnBatalRevisi = document.getElementById('btn_batal_revisi');
+        const formRevisi = document.getElementById('form_revisi');
 
-    if (btnBukaRevisi && formRevisi && btnBatalRevisi) {
-        btnBukaRevisi.addEventListener('click', function() {
-            formRevisi.classList.remove('hidden');
-            formRevisi.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        });
+        if (btnBukaRevisi && formRevisi && btnBatalRevisi) {
+            btnBukaRevisi.addEventListener('click', function() {
+                formRevisi.classList.remove('hidden');
+                formRevisi.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
 
-        btnBatalRevisi.addEventListener('click', function() {
-            formRevisi.classList.add('hidden');
-        });
-    }
+            btnBatalRevisi.addEventListener('click', function() {
+                formRevisi.classList.add('hidden');
+            });
+        }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        initRealTimeValidation('form_revisi');
-    });
+        if (formRevisi && typeof initRealTimeValidation === 'function') {
+            initRealTimeValidation('form_revisi');
+        }
+    })();
 </script>
 @endsection
