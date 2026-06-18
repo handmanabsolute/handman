@@ -172,7 +172,7 @@
                 @endif
             </div>
 
-            @if($tugas->status_tugas !== 'Belum Dikerjakan' && $tugas->status_tugas !== 'Revisi')
+            @if($tugas->status_tugas !== 'Belum Dikerjakan')
                 <hr class="border-gray-100">
 
                 
