@@ -253,7 +253,7 @@
                 </div>
             @endif
 
-            @if($tugas->status_tugas === 'Belum Dikerjakan' || $tugas->status_tugas === 'Revisi')
+            @if($tugas->status_tugas === 'Belum Dikerjakan' || $tugas->status_tugas === 'Revisi' || $tugas->status_tugas === 'Menunggu Persetujuan')
                 <hr class="border-gray-100">
                 <div class="space-y-4">
                     <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400">Formulir Lampiran Hasil Kerja</h4>
@@ -361,18 +361,10 @@
                         <div class="flex items-center justify-end pt-4 border-t border-gray-100">
                             <button type="submit" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-[#3B28CC] hover:bg-opacity-90 rounded-xl shadow-sm transition-colors gap-2 cursor-pointer">
                                 <i class="fa-solid fa-paper-plane text-xs"></i>
-                                {{ $tugas->status_tugas === 'Revisi' ? 'Kirim Revisi Tugas Sekarang' : 'Kirim Tugas Sekarang' }}
+                                {{ $tugas->status_tugas === 'Revisi' ? 'Kirim Revisi Tugas Sekarang' : ($tugas->status_tugas === 'Menunggu Persetujuan' ? 'Perbarui Pengumpulan Tugas' : 'Kirim Tugas Sekarang') }}
                             </button>
                         </div>
                     </form>
-                </div>
-            @elseif($tugas->status_tugas === 'Menunggu Persetujuan')
-                <hr class="border-gray-100">
-                <div class="flex items-center justify-end">
-                    <button type="button" disabled class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-blue-600 bg-blue-50 rounded-xl cursor-not-allowed gap-2 w-full sm:w-auto">
-                        <i class="fa-solid fa-hourglass-half text-xs"></i>
-                        Menunggu Peninjauan Manajer
-                    </button>
                 </div>
             @else
                 <hr class="border-gray-100">
