@@ -70,7 +70,6 @@
             <img src="{{ asset('assets/logo.png') }}" alt="Ilustrasi" class="w-full h-full object-contain">
         </div>
         <h2 class="text-3xl lg:text-4xl font-bold mb-4 tracking-wide leading-tight shrink-0">Sistem Management<br>Tugas Kantor</h2>
-        <p class="text-sm lg:text-base opacity-80 font-light mt-2 shrink-0">Sistem Management Tugas Kantor</p>
     </div>
 
 </div>
