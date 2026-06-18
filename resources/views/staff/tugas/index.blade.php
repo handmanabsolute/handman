@@ -97,7 +97,9 @@
                                 {{ \Carbon\Carbon::parse($item->tanggal_tugas)->format('d M Y, H:i') }}
                             </td>
                             <td class="p-4 font-mono text-xs text-gray-600">
-                                {{ \Carbon\Carbon::parse($item->deadline_tugas)->format('d M Y, H:i') }}
+                                @php $isOverdue = \Carbon\Carbon::parse($item->deadline_tugas)->isPast() && $item->status_tugas !== 'Selesai'; @endphp
+                                <span class="{{ $isOverdue ? 'text-red-600 font-semibold' : 'text-gray-600' }}">{{ \Carbon\Carbon::parse($item->deadline_tugas)->format('d M Y, H:i') }}</span>
+                                @if($isOverdue)<br><span class="text-[9px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded-md mt-0.5 inline-block">Terlewat</span>@endif
                             </td>
                             <td class="p-4">
                                 @php
@@ -142,7 +144,10 @@
                 <div class="flex items-start justify-between gap-2">
                     <div>
                         <h3 class="text-sm font-semibold text-gray-800 leading-snug">{{ $item->nama_tugas }}</h3>
-                        <p class="text-[10px] text-gray-400 mt-1">Deadline: {{ \Carbon\Carbon::parse($item->deadline_tugas)->format('d M Y, H:i') }}</p>
+                        @php $isOverdueMobile = \Carbon\Carbon::parse($item->deadline_tugas)->isPast() && $item->status_tugas !== 'Selesai'; @endphp
+                        <p class="text-[10px] {{ $isOverdueMobile ? 'text-red-600 font-semibold' : 'text-gray-400' }} mt-1">Deadline: {{ \Carbon\Carbon::parse($item->deadline_tugas)->format('d M Y, H:i') }}
+                            @if($isOverdueMobile)<span class="text-[9px] font-bold text-red-500 bg-red-50 px-1 py-0.5 rounded-md ml-1">Terlewat</span>@endif
+                        </p>
                     </div>
                     @php
                         $statusColor = match($item->status_tugas) {

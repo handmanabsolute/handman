@@ -55,7 +55,11 @@
                 </div>
                 <div>
                     <span class="block font-semibold text-gray-400 text-xs uppercase tracking-wider">Batas Akhir Selesai</span>
-                    <span class="text-red-600 font-semibold block mt-1.5">{{ \Carbon\Carbon::parse($tugas->deadline_tugas)->format('d F Y, H:i') }}</span>
+                    @php $isOverdue = \Carbon\Carbon::parse($tugas->deadline_tugas)->isPast() && $tugas->status_tugas !== 'Selesai'; @endphp
+                    <span class="{{ $isOverdue ? 'text-red-600' : 'text-gray-800' }} font-semibold block mt-1.5">{{ \Carbon\Carbon::parse($tugas->deadline_tugas)->format('d F Y, H:i') }}</span>
+                    @if($isOverdue)
+                        <span class="text-[9px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded-md mt-0.5 inline-block">Melewati Deadline</span>
+                    @endif
                 </div>
                 <div>
                     <span class="block font-semibold text-gray-400 text-xs uppercase tracking-wider">Status Saat Ini</span>
